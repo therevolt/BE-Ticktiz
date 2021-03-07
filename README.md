@@ -43,6 +43,13 @@ PORT= #port app
 HOST= #host/domain app
 ROOT_PATH= #root path app
 ```
+Detail CONFIG GENERAL
+| URL | [http://localhost:6000/api/v1]() |
+| :-------------: |:-------------:|
+| PORT | 6000 |
+| HOST | [http://localhost]() |
+| ROOT_PATH | /api/v1 |
+
 4. Done, You can run it in the way below
 ##### Developer Mode (with nodemon)
 ```
