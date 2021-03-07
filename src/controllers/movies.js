@@ -5,7 +5,7 @@ module.exports = {
   inputMovie: (req, res) => {
     movieModels
       .inputMovies(req.body)
-      .then((result) => {
+      .then(() => {
         formatResult(res, 201, true, "success input 1 data", req.body);
       })
       .catch((err) => {
