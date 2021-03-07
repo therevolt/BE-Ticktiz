@@ -78,7 +78,7 @@ npm start
 
 ## 🎯 Target Assignment
 |Assignment | Status | Info |
-|:---------:|:-------:|:----:|
+|:---------|:-------:|:----:|
 |Database|✅||
 |CRUD|✅||
 |Pencarian Tiket Film|✅||
