@@ -76,6 +76,23 @@ npm start
 [Click Here](https://documenter.getpostman.com/view/10780576/Tz5jeLFz#de35d897-0209-4a28-b9d3-cd2225756a85)
 
 
+## 🎯 Target Assignment
+|Assignment | Status | Info |
+|:---------:|:-------:|:----:|
+|Database|✅||
+|CRUD|✅||
+|Pencarian Tiket Film|✅||
+|Pengurutan Transaksi dan Tiket Film Berdasarkan Yang Terbaru|✅||
+|Pagination|✅||
+|GitHub|✅|[Here](https://github.com/therevolt/BE-Ticktiz)|
+|Linter|✅||
+|Flowchart dari 1 Endpoint|✅|[Here](https://drive.google.com/drive/folders/1E4yWNIxbCZDeedrTu19iAa30sN_PQqkz?usp=sharing)
+|Error Handling|✅||
+|(Opsional) Dokumentasi Postman|✅|[Here](https://documenter.getpostman.com/view/10780576/Tz5jeLFz#780297f5-2766-41f8-adce-21ec23b0e0b7)
+|Cors|✅|
+|Env|✅|
+
+
 ## ✍️ Authors
 
 - [@therevolt](https://github.com/therevolt)
