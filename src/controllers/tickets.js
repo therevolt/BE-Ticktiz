@@ -9,7 +9,11 @@ module.exports = {
         formatResult(res, 201, true, `success input ${result.affectedRows} data`, req.body);
       })
       .catch((err) => {
-        formatResult(res, 400, false, err, null);
+        if (err === "ticket already exists") {
+          formatResult(res, 409, false, err, null);
+        } else {
+          formatResult(res, 406, false, `userId not registered`, null);
+        }
       });
   },
   getDetailTicketByUserId: (req, res) => {

@@ -26,7 +26,7 @@ module.exports = {
     movieModels
       .editMovieDetails(req.body, req.params.movieId)
       .then((result) => {
-        formatResult(res, 200, true, `${result.length} data has been updated`, result[0]);
+        formatResult(res, 200, true, `${result.length} data has been updated`, result);
       })
       .catch((err) => {
         formatResult(res, 400, false, err, null);
@@ -38,7 +38,7 @@ module.exports = {
         if (result.length === 1) {
           formatResult(res, 200, true, `${result.length} data found`, result);
         } else {
-          formatResult(res, 200, true, `${result.length} data found`, result[0]);
+          formatResult(res, 200, true, `${result.length} data found`, result);
         }
       } else {
         formatResult(res, 400, false, `movieId not found`, null);
