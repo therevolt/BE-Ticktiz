@@ -54,7 +54,7 @@ module.exports = {
     trxModels
       .deleteTrxById(req.params.trxId)
       .then((result) => {
-        formatResult(res, 200, true, result, null);
+        formatResult(res, 204, true, result, null);
       })
       .catch((err) => {
         formatResult(res, 400, false, err, null);

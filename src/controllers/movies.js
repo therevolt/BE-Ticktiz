@@ -26,7 +26,7 @@ module.exports = {
     movieModels
       .editMovieDetails(req.body, req.params.movieId)
       .then((result) => {
-        formatResult(res, 200, true, `${result.length} data has been updated`, result);
+        formatResult(res, 200, true, `${result.length} data has been updated`, result[0]);
       })
       .catch((err) => {
         formatResult(res, 400, false, err, null);
@@ -35,7 +35,11 @@ module.exports = {
   getMovieDetails: (req, res) => {
     movieModels.getMovieDetails(req.params.movieId).then((result) => {
       if (result.length > 0) {
-        formatResult(res, 200, true, `${result.length} data found`, result);
+        if (result.length === 1) {
+          formatResult(res, 200, true, `${result.length} data found`, result);
+        } else {
+          formatResult(res, 200, true, `${result.length} data found`, result[0]);
+        }
       } else {
         formatResult(res, 400, false, `movieId not found`, null);
       }
@@ -44,7 +48,7 @@ module.exports = {
   delMovie: (req, res) => {
     movieModels.delMovie(req.params.movieId).then((result) => {
       if (result.affectedRows === 1) {
-        formatResult(res, 200, true, `success delete data id(${req.params.movieId})`, null);
+        formatResult(res, 204, true, `success delete data id(${req.params.movieId})`, null);
       } else {
         formatResult(res, 400, false, `movieId not found`, null);
       }

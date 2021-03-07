@@ -77,7 +77,7 @@ module.exports = {
         }
       })
       .catch((err) => {
-        formatResult(res, 400, false, err, null);
+        formatResult(res, 405, false, err, null);
       });
   },
   deleteTicketByUserId: (req, res) => {
@@ -85,7 +85,7 @@ module.exports = {
       .deleteTicketByUserId(req.query.ticketId, req.params.userId)
       .then((result) => {
         if (result !== 0) {
-          formatResult(res, 200, true, `success delete ${result} row`, null);
+          formatResult(res, 204, true, `success delete ${result} row`, null);
         } else {
           formatResult(res, 404, false, "ticketId or userId not found", null);
         }

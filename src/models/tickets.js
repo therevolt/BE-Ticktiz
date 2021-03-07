@@ -7,8 +7,6 @@ module.exports = {
         "SELECT * FROM `ticket` WHERE movie_id = ? AND seat_count = ? AND seat_description = ?",
         [body.movie_id, body.seat_count, body.seat_description],
         (err, result) => {
-          console.log(err);
-          console.log(result);
           if (result.length < 1) {
             connection.query(
               "INSERT INTO `ticket` (`id`, `playing_time`, `movie_id`, `seat_count`, `seat_description`, `user_id`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, current_timestamp(), ?);",
@@ -36,7 +34,6 @@ module.exports = {
     });
   },
   getDetailTicketByUserId: (userId) => {
-    console.log(userId);
     return new Promise((resolve, reject) => {
       connection.query(
         "SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ? LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id) ORDER BY ticket.playing_time DESC",
@@ -52,13 +49,11 @@ module.exports = {
     });
   },
   getDetailTicketByMovieId: (userId, movieId) => {
-    console.log(`debug`);
     return new Promise((resolve, reject) => {
       connection.query(
         "SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ? AND ticket.movie_id = ? LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id)",
         [userId, movieId],
         (err, result) => {
-          console.log(result);
           if (!err) {
             resolve(result);
           } else {
@@ -75,26 +70,28 @@ module.exports = {
           "SELECT id FROM `movies` WHERE `name` LIKE ?",
           `${name}%`,
           (err, result) => {
-            console.log(result);
-            if (!err) {
-              connection.query(
-                "SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ? AND ticket.movie_id = ? LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id)",
-                [userId, result[0].id],
-                (errs, results) => {
-                  console.log(results);
-                  if (!errs) {
-                    if (results.length > 0) {
-                      resolve(results);
+            if (result.length > 0) {
+              if (!err) {
+                connection.query(
+                  "SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ? AND ticket.movie_id = ? LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id)",
+                  [userId, result[0].id],
+                  (errs, results) => {
+                    if (!errs) {
+                      if (results.length > 0) {
+                        resolve(results);
+                      } else {
+                        reject("ticket not found");
+                      }
                     } else {
-                      reject("ticket not found");
+                      reject(err.message);
                     }
-                  } else {
-                    reject(err.message);
                   }
-                }
-              );
+                );
+              } else {
+                reject(err.message);
+              }
             } else {
-              reject(err.message);
+              reject(`movie not found`);
             }
           }
         );
