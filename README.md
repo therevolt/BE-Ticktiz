@@ -18,6 +18,7 @@ Follow the steps below
 1. Clone this repo
 ```
 git clone https://github.com/therevolt/BE-Ticktiz
+cd BE-Ticktiz
 ```
 
 2. Install module
