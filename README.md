@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://miro.medium.com/max/1198/1*gV9AeJImpGRTlDs_560erw.png" alt="Bot logo"></a>
+ <img width=400px height=200px src="https://124135-361502-raikfcquaxqncofqfm.stackpathdns.com/asset/img/banners/blog/rest_api.png" alt="logo"></a>
 </p>
 
 <h3 align="center">Backend Tickitz - Arkademy</h3>
