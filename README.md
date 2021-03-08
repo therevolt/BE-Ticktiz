@@ -123,18 +123,18 @@ npm start
 ## 🎯 Target Assignment
 |Assignment | Status | Info |
 |:---------|:-------:|:----:|
-|Database|✅||
-|CRUD|✅||
-|Pencarian Tiket Film|✅||
-|Pengurutan Transaksi dan Tiket Film Berdasarkan Yang Terbaru|✅||
-|Pagination|✅||
+|Database|✅|DONE|
+|CRUD|✅|DONE|
+|Pencarian Tiket Film|✅|DONE|
+|Pengurutan Transaksi dan Tiket Film Berdasarkan Yang Terbaru|✅|DONE|
+|Pagination|✅| User, Ticket, Movie |
 |GitHub|✅|[Here](https://github.com/therevolt/BE-Ticktiz)|
-|Linter|✅||
+|Linter|✅|DONE|
 |Flowchart dari 1 Endpoint|✅|[Here](https://drive.google.com/drive/folders/1E4yWNIxbCZDeedrTu19iAa30sN_PQqkz?usp=sharing)
-|Error Handling|✅||
+|Error Handling|✅|DONE|
 |(Opsional) Dokumentasi Postman|✅|[Here](https://documenter.getpostman.com/view/10780576/Tz5jeLFz#780297f5-2766-41f8-adce-21ec23b0e0b7)
-|Cors|✅|
-|Env|✅|
+|Cors|✅|DONE|
+|Env|✅|DONE|
 
 
 ## ✍️ Authors
