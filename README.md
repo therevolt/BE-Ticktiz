@@ -10,6 +10,29 @@
 ## 🧐 About
 This is the repository Backend of the Bootcamp Arkademy task
 
+#### User Endpoint
+| METHOD | ENDPOINT | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+| ```POST``` | /v1/users | Input Data To Table Users |
+| ```GET``` | /v1/users/:userId | Get Data By userID |
+| ```GET``` | /v1/users | Get All Data User |
+| ```GET``` | /v1/users?page=xx&limit=xx | Get Data With Pagination |
+| ```PUT``` | /v1/users/:userId | Edit Data By userID |
+| ```DELETE``` | /v1/users/:userId | Delete Data By userID |
+
+
+#### Ticket Endpoint
+| METHOD | ENDPOINT | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+| ```POST``` | /v1/tickets | Input Data To Table Ticket |
+| ```GET``` | /v1/tickets/details/movie/:userId&?movie=:movieId | Get Ticket By userID & movieID|
+| ```GET``` | /v1/tickets/details/user/:userId | Get All Ticket By userID |
+| ```GET``` | /v1/tickets/details/user/:userId?page=xx&limit=xx | Get Ticket By userID With Pagination |
+| ```GET``` | /v1/tickets/:userId?name=:movieName| Get Ticket By userID With Spesific Movie Name |
+| ```GET``` | /v1/tickets?ticketId:ticketId | Get Ticket By ticketId|
+| ```PUT``` | /v1/tickets/:userId?ticketId=:ticketId | Edit Ticket By userID & ticketID |
+| ```DELETE``` | /v1/tickets/:userId?ticketId=:ticketId | Delete Ticket By userID & ticketID |
+
 
 ## 💻 Installation
 
@@ -21,10 +44,15 @@ git clone https://github.com/therevolt/BE-Ticktiz
 cd BE-Ticktiz
 ```
 
-2. Install module
+2. Install module & Import Database
+##### Install module
 ```
 npm install
 ```
+
+##### Import Module
+Import ``` tickitz.sql ``` To Your Databases
+<br> You Can Follow [This Steps](https://www.a2hosting.com/kb/developer-corner/mysql/import-and-export-a-mysql-database)
 
 3. Create env file
 ```
