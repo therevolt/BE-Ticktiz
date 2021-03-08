@@ -30,7 +30,7 @@ module.exports = {
               }
             );
           } else {
-            reject(`movies already exists`);
+            reject("movies already exists");
           }
         }
       });
@@ -123,7 +123,7 @@ module.exports = {
               resolve(results);
             });
           } else {
-            reject(`movieId not found`);
+            reject("movieId not found");
           }
         } else {
           reject(err.message);

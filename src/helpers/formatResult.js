@@ -3,5 +3,5 @@ module.exports = (res, code, stat, msg, data) => {
     status: stat,
     message: msg,
     data: data
-  })
-}
+  });
+};

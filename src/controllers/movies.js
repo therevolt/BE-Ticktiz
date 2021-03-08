@@ -20,9 +20,9 @@ module.exports = {
       })
       .catch((err) => {
         if (req.query.page && req.query.limit) {
-          formatResult(res, 409, false, `Page or limit exceeds the existing data`, err);
+          formatResult(res, 409, false, "Page or limit exceeds the existing data", err);
         } else {
-          formatResult(res, 500, false, `Internal Server Error`, err);
+          formatResult(res, 500, false, "Internal Server Error", err);
         }
       });
   },
@@ -45,7 +45,7 @@ module.exports = {
           formatResult(res, 200, true, `${result.length} data found`, result);
         }
       } else {
-        formatResult(res, 400, false, `movieId not found`, null);
+        formatResult(res, 400, false, "movieId not found", null);
       }
     });
   },
@@ -54,7 +54,7 @@ module.exports = {
       if (result.affectedRows === 1) {
         formatResult(res, 204, true, `success delete data id(${req.params.movieId})`, null);
       } else {
-        formatResult(res, 400, false, `movieId not found`, null);
+        formatResult(res, 400, false, "movieId not found", null);
       }
     });
   },

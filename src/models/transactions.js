@@ -78,7 +78,7 @@ module.exports = {
               }
             });
           } else {
-            reject(`trxId not found`);
+            reject("trxId not found");
           }
         } else {
           reject(err.message);
@@ -93,7 +93,7 @@ module.exports = {
           if (result.affectedRows === 1) {
             resolve(`success delete id ${trxId}`);
           } else {
-            reject(`trxId not found`);
+            reject("trxId not found");
           }
         } else {
           reject(err.message);

@@ -12,7 +12,7 @@ module.exports = {
         if (err === "ticket already exists") {
           formatResult(res, 409, false, err, null);
         } else {
-          formatResult(res, 406, false, `userId not registered`, null);
+          formatResult(res, 406, false, "userId not registered", null);
         }
       });
   },
@@ -23,16 +23,16 @@ module.exports = {
         if (result.length > 0) {
           formatResult(res, 200, true, `${result.length} data found`, result);
         } else if (typeof result === "object") {
-          formatResult(res, 200, true, `success`, result);
+          formatResult(res, 200, true, "success", result);
         } else {
           formatResult(res, 404, false, "data not found", null);
         }
       })
       .catch((err) => {
         if (req.query.page && req.query.limit) {
-          formatResult(res, 409, false, `Page or limit exceeds the existing data`, err);
+          formatResult(res, 409, false, "Page or limit exceeds the existing data", err);
         } else {
-          formatResult(res, 500, false, `Internal Server Error`, err);
+          formatResult(res, 500, false, "Internal Server Error", err);
         }
       });
   },

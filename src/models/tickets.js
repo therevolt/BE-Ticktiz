@@ -27,7 +27,7 @@ module.exports = {
               }
             );
           } else {
-            reject(`ticket already exists`);
+            reject("ticket already exists");
           }
         }
       );
@@ -158,7 +158,7 @@ module.exports = {
                 reject(err.message);
               }
             } else {
-              reject(`movie not found`);
+              reject("movie not found");
             }
           }
         );
@@ -207,6 +207,8 @@ module.exports = {
         (err, result) => {
           if (result) {
             resolve(result.affectedRows);
+          } else {
+            reject(err.message);
           }
         }
       );

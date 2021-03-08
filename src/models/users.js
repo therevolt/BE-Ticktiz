@@ -159,7 +159,7 @@ module.exports = {
                         if (!errs2) {
                           resolve(null);
                         } else {
-                          reject(`error endpoint`);
+                          reject("error endpoint");
                         }
                       });
                     }

@@ -6,7 +6,7 @@ module.exports = {
     trxModels
       .inputTrx(req.body, req.params.userId)
       .then((result) => {
-        formatResult(res, 201, true, `success`, result);
+        formatResult(res, 201, true, "success", result);
       })
       .catch((err) => {
         formatResult(res, 404, false, err, null);
@@ -17,9 +17,9 @@ module.exports = {
       .getTrxByStatus(req.params.userId, req.query.status)
       .then((result) => {
         if (result.length >= 1) {
-          formatResult(res, 200, true, `success`, result);
+          formatResult(res, 200, true, "success", result);
         } else {
-          formatResult(res, 404, false, `transaction history not found`, null);
+          formatResult(res, 404, false, "transaction history not found", null);
         }
       })
       .catch((err) => {
@@ -31,9 +31,9 @@ module.exports = {
       .getAllTrx(req.params.userId)
       .then((result) => {
         if (result.length >= 1) {
-          formatResult(res, 200, true, `success`, result);
+          formatResult(res, 200, true, "success", result);
         } else {
-          formatResult(res, 404, false, `userId or transaction not found`, null);
+          formatResult(res, 404, false, "userId or transaction not found", null);
         }
       })
       .catch((err) => {
@@ -44,7 +44,7 @@ module.exports = {
     trxModels
       .editTrxById(req.params.trxId, req.body)
       .then((result) => {
-        formatResult(res, 200, true, `success update 1 row`, result);
+        formatResult(res, 200, true, "success update 1 row", result);
       })
       .catch((err) => {
         formatResult(res, 400, false, err, null);
