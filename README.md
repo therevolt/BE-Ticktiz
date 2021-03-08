@@ -43,7 +43,7 @@ PORT= #port app
 HOST= #host/domain app
 ```
 Detail CONFIG GENERAL
-| URL | [http://localhost:6000]() |
+| EXAMPLE URL | [http://localhost:6000]() |
 | :-------------: |:-------------:|
 | PORT | 6000 |
 | HOST | [http://localhost]() |
