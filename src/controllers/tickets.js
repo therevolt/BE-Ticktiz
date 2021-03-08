@@ -18,16 +18,22 @@ module.exports = {
   },
   getDetailTicketByUserId: (req, res) => {
     ticketModels
-      .getDetailTicketByUserId(req.params.userId)
+      .getDetailTicketByUserId(req.query.page, req.query.limit, req.params.userId)
       .then((result) => {
         if (result.length > 0) {
           formatResult(res, 200, true, `${result.length} data found`, result);
+        } else if (typeof result === "object") {
+          formatResult(res, 200, true, `success`, result);
         } else {
           formatResult(res, 404, false, "data not found", null);
         }
       })
       .catch((err) => {
-        formatResult(res, 400, false, err, null);
+        if (req.query.page && req.query.limit) {
+          formatResult(res, 409, false, `Page or limit exceeds the existing data`, err);
+        } else {
+          formatResult(res, 500, false, `Internal Server Error`, err);
+        }
       });
   },
   getTicketByFilmName: (req, res) => {

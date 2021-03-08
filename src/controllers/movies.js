@@ -19,7 +19,11 @@ module.exports = {
         formatResult(res, 200, true, "success", result);
       })
       .catch((err) => {
-        formatResult(res, 404, false, null, err);
+        if (req.query.page && req.query.limit) {
+          formatResult(res, 409, false, `Page or limit exceeds the existing data`, err);
+        } else {
+          formatResult(res, 500, false, `Internal Server Error`, err);
+        }
       });
   },
   editMovieDetails: (req, res) => {

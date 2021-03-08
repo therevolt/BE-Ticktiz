@@ -60,9 +60,9 @@ module.exports = {
                     current_page: parseInt(numPage),
                     obj_limit: parseInt(limit),
                     max_page: pages,
-                    url_next_page: `${process.env.HOST}:${process.env.PORT}${
-                      process.env.ROOT_PATH
-                    }/movies?page=${parseInt(numPage) + 1}&limit=${limit}`,
+                    url_next_page: `${process.env.HOST}:${process.env.PORT}/v1/movies?page=${
+                      parseInt(numPage) + 1
+                    }&limit=${limit}`,
                     url_prev_page: null,
                     result: results,
                   });
@@ -71,33 +71,38 @@ module.exports = {
                     current_page: parseInt(numPage),
                     obj_limit: parseInt(limit),
                     max_page: pages,
-                    url_next_page: `${process.env.HOST}:${process.env.PORT}${
-                      process.env.ROOT_PATH
-                    }/movies?page=${parseInt(numPage) + 1}&limit=${limit}`,
-                    url_prev_page: `${process.env.HOST}:${process.env.PORT}${
-                      process.env.ROOT_PATH
-                    }/movies?page=${parseInt(numPage) - 1}&limit=${limit}`,
+                    url_next_page: `${process.env.HOST}:${process.env.PORT}/v1/movies?page=${
+                      parseInt(numPage) + 1
+                    }&limit=${limit}`,
+                    url_prev_page: `${process.env.HOST}:${process.env.PORT}/v1/movies?page=${
+                      parseInt(numPage) - 1
+                    }&limit=${limit}`,
                     result: results,
                   });
                 }
-              } else if (parseInt(numPage) > pages) {
-                reject({
-                  current_page: parseInt(numPage),
-                  obj_limit: parseInt(limit),
-                  max_page: pages,
-                  url_next_page: null,
-                  url_prev_page: `${process.env.HOST}:${process.env.PORT}${process.env.ROOT_PATH}/movies?page=${pages}&limit=${limit}`,
-                  result: null,
-                });
+              } else if (parseInt(numPage) >= pages) {
+                if (results.length === 0) {
+                  reject(null);
+                } else {
+                  resolve({
+                    current_page: parseInt(numPage),
+                    obj_limit: parseInt(limit),
+                    obj_count: results.length,
+                    max_page: pages,
+                    url_next_page: null,
+                    url_prev_page: null,
+                    result: results,
+                  });
+                }
               } else {
                 resolve({
                   current_page: parseInt(numPage),
                   obj_limit: parseInt(limit),
                   max_page: pages,
                   url_next_page: null,
-                  url_prev_page: `${process.env.HOST}:${process.env.PORT}${
-                    process.env.ROOT_PATH
-                  }/movies?page=${parseInt(numPage) - 1}&limit=${limit}`,
+                  url_prev_page: `${process.env.HOST}:${process.env.PORT}/v1/movies?page=${
+                    parseInt(numPage) - 1
+                  }&limit=${limit}`,
                   result: results,
                 });
               }

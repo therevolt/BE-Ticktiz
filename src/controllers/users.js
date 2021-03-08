@@ -16,14 +16,25 @@ module.exports = {
         }
       });
   },
-  getUserByUserId: (req, res) => {
-    userModels.getUserByUserId(req.params.userId).then((result) => {
-      if (result.length >= 1) {
-        formatResult(res, 200, true, `success ${result.length} data found`, result);
-      } else {
-        formatResult(res, 404, false, `data not found`, null);
-      }
-    });
+  getUser: (req, res) => {
+    userModels
+      .getUser(req.query.page, req.query.limit, req.params.userId)
+      .then((result) => {
+        if (result.length >= 1) {
+          formatResult(res, 200, true, `success ${result.length} data found`, result);
+        } else if (typeof result === "object") {
+          formatResult(res, 200, true, `success`, result);
+        } else {
+          formatResult(res, 404, false, `data not found`, null);
+        }
+      })
+      .catch((err) => {
+        if (req.query.page && req.query.limit) {
+          formatResult(res, 409, false, `Page or limit exceeds the existing data`, err);
+        } else {
+          formatResult(res, 500, false, `Internal Server Error`, err);
+        }
+      });
   },
   editUserByUserId: (req, res) => {
     userModels

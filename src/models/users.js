@@ -26,16 +26,99 @@ module.exports = {
       });
     });
   },
-  getUserByUserId: (userId) => {
-    return new Promise((resolve, reject) => {
-      connection.query("SELECT * FROM `user` WHERE id = ?", userId, (err, result) => {
-        if (!err) {
-          resolve(result);
-        } else {
-          reject(err.message);
-        }
+  getUser: (numPage, limit, userId) => {
+    if (!numPage && !limit) {
+      if (userId) {
+        console.log(userId);
+        return new Promise((resolve, reject) => {
+          connection.query("SELECT * FROM `user` WHERE id = ?", [userId], (err, result) => {
+            if (!err) {
+              resolve(result);
+            } else {
+              reject(err.message);
+            }
+          });
+        });
+      } else {
+        return new Promise((resolve, reject) => {
+          connection.query("SELECT * FROM `user`", (err, result) => {
+            if (!err) {
+              resolve(result);
+            } else {
+              reject(err.message);
+            }
+          });
+        });
+      }
+    } else {
+      return new Promise((resolve, reject) => {
+        connection.query("SELECT * FROM `user`", (err, result) => {
+          if (!err) {
+            const pages = Math.ceil(parseInt(result.length) / parseInt(limit));
+            const query = `SELECT * FROM user LIMIT ${numPage - 1},${limit}`;
+            connection.query(query, (errs, results) => {
+              if (parseInt(numPage) < pages) {
+                if (parseInt(numPage) === 1) {
+                  resolve({
+                    current_page: parseInt(numPage),
+                    obj_limit: parseInt(limit),
+                    obj_count: results.length,
+                    max_page: pages,
+                    url_next_page: `${process.env.HOST}:${process.env.PORT}/v1/users?page=${
+                      parseInt(numPage) + 1
+                    }&limit=${limit}`,
+                    url_prev_page: null,
+                    result: results,
+                  });
+                } else {
+                  resolve({
+                    current_page: parseInt(numPage),
+                    obj_limit: parseInt(limit),
+                    obj_count: results.length,
+                    max_page: pages,
+                    url_next_page: `${process.env.HOST}:${process.env.PORT}/v1/users?page=${
+                      parseInt(numPage) + 1
+                    }&limit=${limit}`,
+                    url_prev_page: `${process.env.HOST}:${process.env.PORT}/v1/users?page=${
+                      parseInt(numPage) - 1
+                    }&limit=${limit}`,
+                    result: results,
+                  });
+                }
+              } else if (parseInt(numPage) >= pages) {
+                if (results.length === 0) {
+                  reject(null);
+                } else {
+                  resolve({
+                    current_page: parseInt(numPage),
+                    obj_limit: parseInt(limit),
+                    obj_count: results.length,
+                    max_page: pages,
+                    url_next_page: null,
+                    url_prev_page: null,
+                    result: results,
+                  });
+                }
+              } else {
+                resolve({
+                  current_page: parseInt(numPage),
+                  obj_limit: parseInt(limit),
+                  obj_count: results.length,
+                  max_page: pages,
+                  url_next_page: null,
+                  url_prev_page: `${process.env.HOST}:${process.env.PORT}/v1/users?page=${
+                    parseInt(numPage) - 1
+                  }&limit=${limit}`,
+                  result: results,
+                });
+              }
+            });
+          } else {
+            reject(err.message);
+          }
+        });
       });
-    });
+    }
   },
   editUserByUserId: (body, userId) => {
     return new Promise((resolve, reject) => {

@@ -33,20 +33,87 @@ module.exports = {
       );
     });
   },
-  getDetailTicketByUserId: (userId) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        "SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ? LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id) ORDER BY ticket.playing_time DESC",
-        [userId],
-        (err, result) => {
+  getDetailTicketByUserId: (numPage, limit, userId) => {
+    if (!numPage && !limit) {
+      return new Promise((resolve, reject) => {
+        connection.query(
+          "SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ? LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id) ORDER BY ticket.playing_time DESC",
+          [userId],
+          (err, result) => {
+            if (!err) {
+              resolve(result);
+            } else {
+              reject(err.message);
+            }
+          }
+        );
+      });
+    } else {
+      return new Promise((resolve, reject) => {
+        connection.query("SELECT * FROM `ticket`", (err, result) => {
           if (!err) {
-            resolve(result);
+            const pages = Math.ceil(parseInt(result.length) / parseInt(limit));
+            const query = "SELECT * FROM `ticket` LIMIT " + `${numPage - 1},${limit}`;
+            connection.query(query, (errs, results) => {
+              if (parseInt(numPage) < pages) {
+                if (parseInt(numPage) === 1) {
+                  resolve({
+                    current_page: parseInt(numPage),
+                    obj_limit: parseInt(limit),
+                    max_page: pages,
+                    url_next_page: `${process.env.HOST}:${process.env.PORT}/ticket?page=${
+                      parseInt(numPage) + 1
+                    }&limit=${limit}`,
+                    url_prev_page: null,
+                    result: results,
+                  });
+                } else {
+                  resolve({
+                    current_page: parseInt(numPage),
+                    obj_limit: parseInt(limit),
+                    max_page: pages,
+                    url_next_page: `${process.env.HOST}:${process.env.PORT}/ticket?page=${
+                      parseInt(numPage) + 1
+                    }&limit=${limit}`,
+                    url_prev_page: `${process.env.HOST}:${process.env.PORT}/ticket?page=${
+                      parseInt(numPage) - 1
+                    }&limit=${limit}`,
+                    result: results,
+                  });
+                }
+              } else if (parseInt(numPage) >= pages) {
+                if (results.length === 0) {
+                  reject(null);
+                } else {
+                  resolve({
+                    current_page: parseInt(numPage),
+                    obj_limit: parseInt(limit),
+                    obj_count: results.length,
+                    max_page: pages,
+                    url_next_page: null,
+                    url_prev_page: null,
+                    result: results,
+                  });
+                }
+              } else {
+                resolve({
+                  current_page: parseInt(numPage),
+                  obj_limit: parseInt(limit),
+                  max_page: pages,
+                  url_next_page: null,
+                  url_prev_page: `${process.env.HOST}:${process.env.PORT}/ticket?page=${
+                    parseInt(numPage) - 1
+                  }&limit=${limit}`,
+                  result: results,
+                });
+              }
+            });
           } else {
             reject(err.message);
           }
-        }
-      );
-    });
+        });
+      });
+    }
   },
   getDetailTicketByMovieId: (userId, movieId) => {
     return new Promise((resolve, reject) => {
