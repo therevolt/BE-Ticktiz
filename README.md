@@ -86,20 +86,16 @@ npm run dev
 npm start
 ```
 
-## 🔖 Sample Response & Preview Request By Postman
-#### Sample Response
+## 🔖 Standard Response & Preview Request By Postman
+#### Standard Response API
 ```json
 {
     "status": true,
     "message": "success register",
-    "data": {
-        "first_name": "Herza",
-        "last_name": "P",
-        "email": "sample@gmail.com",
-        "password": "ArkademY2021"
-    }
+    "data": [object Object]
 }
 ```
+Object data contains content according to the request
 
 #### Preview Request By Postman
 ![Preview](https://i.ibb.co/McdR01S/sample.png)
