@@ -58,6 +58,24 @@ npm run dev
 npm start
 ```
 
+## Sample Response & Preview Request By Postman
+#### Sample Response
+```json
+{
+    "status": true,
+    "message": "success register",
+    "data": {
+        "first_name": "Herza",
+        "last_name": "P",
+        "email": "sample@gmail.com",
+        "password": "ArkademY2021"
+    }
+}
+```
+
+#### Preview Request By Postman
+![Preview](https://i.ibb.co/McdR01S/sample.png)
+
 ## ⛏️ Built Using
 
 - [ExpressJS](https://expressjs.com)
