@@ -45,12 +45,12 @@ cd BE-Ticktiz
 ```
 
 2. Install module & Import Database
-##### Install module
+##### Install Module
 ```
 npm install
 ```
 
-##### Import Module
+##### Import Database
 Import ``` tickitz.sql ``` To Your Databases
 <br> You Can Follow [This Steps](https://www.a2hosting.com/kb/developer-corner/mysql/import-and-export-a-mysql-database)
 
