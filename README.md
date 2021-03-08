@@ -11,7 +11,7 @@
 This is the repository Backend of the Bootcamp Arkademy task
 
 #### User Endpoint
-| METHOD | ENDPOINT | REMARKS |
+| METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```POST``` | /v1/users | Input Data To Table Users |
 | ```GET``` | /v1/users/:userId | Get Data By userID |
@@ -22,7 +22,7 @@ This is the repository Backend of the Bootcamp Arkademy task
 
 
 #### Ticket Endpoint
-| METHOD | ENDPOINT | REMARKS |
+| METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```POST``` | /v1/tickets | Input Data To Table Ticket |
 | ```GET``` | /v1/tickets/details/movie/:userId&?movie=:movieId | Get Ticket By userID & movieID|
