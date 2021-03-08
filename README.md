@@ -10,6 +10,29 @@
 ## 🧐 About
 This is the repository Backend of the Bootcamp Arkademy task
 
+#### User Endpoint
+| METHOD | ENDPOINT | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+| ```POST``` | /v1/users | Input Data To Table Users |
+| ```GET``` | /v1/users/:userId | Get Data By userID |
+| ```GET``` | /v1/users | Get All Data User |
+| ```GET``` | /v1/users?page=xx&limit=xx | Get Data With Pagination |
+| ```PUT``` | /v1/users/:userId | Edit Data By userID |
+| ```DELETE``` | /v1/users/:userId | Delete Data By userID |
+
+
+#### Ticket Endpoint
+| METHOD | ENDPOINT | REMARKS |
+| :-------------: |:-------------:|:-----------:|
+| ```POST``` | /v1/tickets | Input Data To Table Ticket |
+| ```GET``` | /v1/tickets/details/movie/:userId&?movie=:movieId | Get Ticket By userID & movieID|
+| ```GET``` | /v1/tickets/details/user/:userId | Get All Ticket By userID |
+| ```GET``` | /v1/tickets/details/user/:userId?page=xx&limit=xx | Get Ticket By userID With Pagination |
+| ```GET``` | /v1/tickets/:userId?name=:movieName| Get Ticket By userID With Spesific Movie Name |
+| ```GET``` | /v1/tickets?ticketId:ticketId | Get Ticket By ticketId|
+| ```PUT``` | /v1/tickets/:userId?ticketId=:ticketId | Edit Ticket By userID & ticketID |
+| ```DELETE``` | /v1/tickets/:userId?ticketId=:ticketId | Delete Ticket By userID & ticketID |
+
 
 ## 💻 Installation
 
@@ -21,10 +44,15 @@ git clone https://github.com/therevolt/BE-Ticktiz
 cd BE-Ticktiz
 ```
 
-2. Install module
+2. Install module & Import Database
+##### Install module
 ```
 npm install
 ```
+
+##### Import Module
+Import ``` tickitz.sql ``` To Your Databases
+<br> You Can Follow [This Steps](https://www.a2hosting.com/kb/developer-corner/mysql/import-and-export-a-mysql-database)
 
 3. Create env file
 ```
@@ -41,14 +69,12 @@ DB_NAME= #database name
 # ---------------------------------------
 PORT= #port app
 HOST= #host/domain app
-ROOT_PATH= #root path app
 ```
 Detail CONFIG GENERAL
-| URL | [http://localhost:6000/api/v1]() |
+| EXAMPLE URL | [http://localhost:6000]() |
 | :-------------: |:-------------:|
 | PORT | 6000 |
 | HOST | [http://localhost]() |
-| ROOT_PATH | /api/v1 |
 
 4. Done, You can run it in the way below
 ##### Developer Mode (with nodemon)
@@ -59,6 +85,24 @@ npm run dev
 ```
 npm start
 ```
+
+## 🔖 Sample Response & Preview Request By Postman
+#### Sample Response
+```json
+{
+    "status": true,
+    "message": "success register",
+    "data": {
+        "first_name": "Herza",
+        "last_name": "P",
+        "email": "sample@gmail.com",
+        "password": "ArkademY2021"
+    }
+}
+```
+
+#### Preview Request By Postman
+![Preview](https://i.ibb.co/McdR01S/sample.png)
 
 ## ⛏️ Built Using
 
@@ -74,6 +118,23 @@ npm start
 ## 💭 Documentation
 
 [Click Here](https://documenter.getpostman.com/view/10780576/Tz5jeLFz#de35d897-0209-4a28-b9d3-cd2225756a85)
+
+
+## 🎯 Target Assignment
+|Assignment | Status | Info |
+|:---------|:-------:|:----:|
+|Database|✅||
+|CRUD|✅||
+|Pencarian Tiket Film|✅||
+|Pengurutan Transaksi dan Tiket Film Berdasarkan Yang Terbaru|✅||
+|Pagination|✅||
+|GitHub|✅|[Here](https://github.com/therevolt/BE-Ticktiz)|
+|Linter|✅||
+|Flowchart dari 1 Endpoint|✅|[Here](https://drive.google.com/drive/folders/1E4yWNIxbCZDeedrTu19iAa30sN_PQqkz?usp=sharing)
+|Error Handling|✅||
+|(Opsional) Dokumentasi Postman|✅|[Here](https://documenter.getpostman.com/view/10780576/Tz5jeLFz#780297f5-2766-41f8-adce-21ec23b0e0b7)
+|Cors|✅|
+|Env|✅|
 
 
 ## ✍️ Authors
