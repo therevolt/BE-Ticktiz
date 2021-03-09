@@ -11,7 +11,7 @@
 This is the repository Backend of the Bootcamp Arkademy task
 
 #### User Endpoint
-| METHOD | ENDPOINT | REMARKS |
+| METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```POST``` | /v1/users | Input Data To Table Users |
 | ```GET``` | /v1/users/:userId | Get Data By userID |
@@ -22,7 +22,7 @@ This is the repository Backend of the Bootcamp Arkademy task
 
 
 #### Ticket Endpoint
-| METHOD | ENDPOINT | REMARKS |
+| METHOD | API | REMARKS |
 | :-------------: |:-------------:|:-----------:|
 | ```POST``` | /v1/tickets | Input Data To Table Ticket |
 | ```GET``` | /v1/tickets/details/movie/:userId&?movie=:movieId | Get Ticket By userID & movieID|
@@ -45,12 +45,12 @@ cd BE-Ticktiz
 ```
 
 2. Install module & Import Database
-##### Install module
+##### Install Module
 ```
 npm install
 ```
 
-##### Import Module
+##### Import Database
 Import ``` tickitz.sql ``` To Your Databases
 <br> You Can Follow [This Steps](https://www.a2hosting.com/kb/developer-corner/mysql/import-and-export-a-mysql-database)
 
@@ -86,20 +86,16 @@ npm run dev
 npm start
 ```
 
-## 🔖 Sample Response & Preview Request By Postman
-#### Sample Response
+## 🔖 Standard Response & Preview Request By Postman
+#### Standard Response API
 ```json
 {
     "status": true,
     "message": "success register",
-    "data": {
-        "first_name": "Herza",
-        "last_name": "P",
-        "email": "sample@gmail.com",
-        "password": "ArkademY2021"
-    }
+    "data": [object Object]
 }
 ```
+Object data contains content according to the request
 
 #### Preview Request By Postman
 ![Preview](https://i.ibb.co/McdR01S/sample.png)
@@ -123,18 +119,18 @@ npm start
 ## 🎯 Target Assignment
 |Assignment | Status | Info |
 |:---------|:-------:|:----:|
-|Database|✅||
-|CRUD|✅||
-|Pencarian Tiket Film|✅||
-|Pengurutan Transaksi dan Tiket Film Berdasarkan Yang Terbaru|✅||
-|Pagination|✅||
+|Database|✅|DONE|
+|CRUD|✅|DONE|
+|Pencarian Tiket Film|✅|DONE|
+|Pengurutan Transaksi dan Tiket Film Berdasarkan Yang Terbaru|✅|DONE|
+|Pagination|✅| User, Ticket, Movie |
 |GitHub|✅|[Here](https://github.com/therevolt/BE-Ticktiz)|
-|Linter|✅||
+|Linter|✅|DONE|
 |Flowchart dari 1 Endpoint|✅|[Here](https://drive.google.com/drive/folders/1E4yWNIxbCZDeedrTu19iAa30sN_PQqkz?usp=sharing)
-|Error Handling|✅||
+|Error Handling|✅|DONE|
 |(Opsional) Dokumentasi Postman|✅|[Here](https://documenter.getpostman.com/view/10780576/Tz5jeLFz#780297f5-2766-41f8-adce-21ec23b0e0b7)
-|Cors|✅|
-|Env|✅|
+|Cors|✅|DONE|
+|Env|✅|DONE|
 
 
 ## ✍️ Authors
