@@ -20,7 +20,7 @@ module.exports = {
       })
       .catch((err) => {
         if (req.query.page && req.query.limit) {
-          formatResult(res, 409, false, "Page or limit exceeds the existing data", err);
+          formatResult(res, 422, false, "Page or limit exceeds the existing data", err);
         } else {
           formatResult(res, 500, false, "Internal Server Error", err);
         }

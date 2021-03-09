@@ -18,3 +18,19 @@ app.use(cors());
 app.use(morgan("dev"));
 
 app.use("/v1", Routes);
+
+app.use("*", (req, res) => {
+  if (req.params["0"].match("/v1")) {
+    res.status(405).json({
+      status: false,
+      message: "Method Not Allowed",
+      data: null,
+    });
+  } else {
+    res.status(404).json({
+      status: false,
+      message: "Endpoint Not Found",
+      data: null,
+    });
+  }
+});

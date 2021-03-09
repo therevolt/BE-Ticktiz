@@ -8,6 +8,7 @@ Route.post("", ticketControllers.inputTicket)
   .get("", ticketControllers.getTicketById)
   .get("/details/user/:userId", ticketControllers.getDetailTicketByUserId)
   .get("/details/movie/:userId", ticketControllers.getTicketByMovieId)
+  .get("/sort/:userId", ticketControllers.sortTicketByPlayingTime)
   .put("/:userId", ticketControllers.updateTicketByUserId)
   .delete("/:userId", ticketControllers.deleteTicketByUserId);
 

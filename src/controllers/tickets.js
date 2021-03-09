@@ -17,8 +17,14 @@ module.exports = {
       });
   },
   getDetailTicketByUserId: (req, res) => {
+    const by = req.query.by || "desc";
     ticketModels
-      .getDetailTicketByUserId(req.query.page, req.query.limit, req.params.userId)
+      .getDetailTicketByUserId(
+        req.query.page,
+        req.query.limit,
+        req.params.userId,
+        by.toString().toUpperCase()
+      )
       .then((result) => {
         if (result.length > 0) {
           formatResult(res, 200, true, `${result.length} data found`, result);
@@ -72,6 +78,19 @@ module.exports = {
       })
       .catch((err) => {
         formatResult(res, 400, false, err, null);
+      });
+  },
+  sortTicketByPlayingTime: (req, res) => {
+    const by = req.query.by || "desc";
+    const from = req.query.from || new Date();
+    const to = req.query.to || new Date();
+    ticketModels
+      .sortTicketByPlayingTime(from, to, req.params.userId, by.toString().toUpperCase())
+      .then((result) => {
+        formatResult(res, 200, true, `${result.length} data found`, result);
+      })
+      .catch((err) => {
+        formatResult(res, 404, false, err, null);
       });
   },
   updateTicketByUserId: (req, res) => {

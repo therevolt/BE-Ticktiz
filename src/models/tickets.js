@@ -33,15 +33,37 @@ module.exports = {
       );
     });
   },
-  getDetailTicketByUserId: (numPage, limit, userId) => {
+  sortTicketByPlayingTime: (date1, date2, userId, by) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM ticket WHERE user_id = ? AND playing_time BETWEEN ? AND ? ORDER BY playing_time ${by}`,
+        [userId, date1, date2],
+        (err, result) => {
+          if (!err) {
+            if (result.length >= 1) {
+              resolve(result);
+            } else {
+              reject("result not found");
+            }
+          } else {
+            reject(err.message);
+          }
+        }
+      );
+    });
+  },
+  getDetailTicketByUserId: (numPage, limit, userId, by) => {
     if (!numPage && !limit) {
       return new Promise((resolve, reject) => {
         connection.query(
-          "SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ? LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id) ORDER BY ticket.playing_time DESC",
-          [userId],
+          `SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ${userId} LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id) ORDER BY ticket.playing_time ${by}`,
           (err, result) => {
             if (!err) {
-              resolve(result);
+              if (result.length > 0) {
+                resolve(result);
+              } else {
+                reject("data not found");
+              }
             } else {
               reject(err.message);
             }
@@ -53,7 +75,9 @@ module.exports = {
         connection.query("SELECT * FROM `ticket`", (err, result) => {
           if (!err) {
             const pages = Math.ceil(parseInt(result.length) / parseInt(limit));
-            const query = "SELECT * FROM `ticket` LIMIT " + `${numPage - 1},${limit}`;
+            const query = `SELECT * FROM ticket WHERE user_id = ${userId} ORDER BY playing_time ${by} LIMIT ${
+              numPage - 1
+            },${limit}`;
             connection.query(query, (errs, results) => {
               if (parseInt(numPage) < pages) {
                 if (parseInt(numPage) === 1) {
@@ -61,7 +85,9 @@ module.exports = {
                     current_page: parseInt(numPage),
                     obj_limit: parseInt(limit),
                     max_page: pages,
-                    url_next_page: `${process.env.HOST}:${process.env.PORT}/ticket?page=${
+                    url_next_page: `${process.env.HOST}:${
+                      process.env.PORT
+                    }/v1/tickets/details/user/${userId}?page=${
                       parseInt(numPage) + 1
                     }&limit=${limit}`,
                     url_prev_page: null,
@@ -72,10 +98,14 @@ module.exports = {
                     current_page: parseInt(numPage),
                     obj_limit: parseInt(limit),
                     max_page: pages,
-                    url_next_page: `${process.env.HOST}:${process.env.PORT}/ticket?page=${
+                    url_next_page: `${process.env.HOST}:${
+                      process.env.PORT
+                    }/v1/tickets/details/user/${userId}?page=${
                       parseInt(numPage) + 1
                     }&limit=${limit}`,
-                    url_prev_page: `${process.env.HOST}:${process.env.PORT}/ticket?page=${
+                    url_prev_page: `${process.env.HOST}:${
+                      process.env.PORT
+                    }/v1/tickets/details/user/${userId}?page=${
                       parseInt(numPage) - 1
                     }&limit=${limit}`,
                     result: results,
@@ -101,9 +131,9 @@ module.exports = {
                   obj_limit: parseInt(limit),
                   max_page: pages,
                   url_next_page: null,
-                  url_prev_page: `${process.env.HOST}:${process.env.PORT}/ticket?page=${
-                    parseInt(numPage) - 1
-                  }&limit=${limit}`,
+                  url_prev_page: `${process.env.HOST}:${
+                    process.env.PORT
+                  }/v1/tickets/details/user/${userId}?page=${parseInt(numPage) - 1}&limit=${limit}`,
                   result: results,
                 });
               }
