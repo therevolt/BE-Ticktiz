@@ -26,6 +26,33 @@ module.exports = {
       });
     });
   },
+  loginUser: (email, pass) => {
+    return new Promise((resolve, reject) => {
+      if (email && pass) {
+        connection.query("SELECT * FROM `user` WHERE email = ?", email, (err, result) => {
+          if (!err) {
+            if (result.length > 0) {
+              connection.query(
+                "SELECT * FROM `user` WHERE email = ? AND password = ?",
+                [email, pass],
+                (errs, results) => {
+                  if (!errs) {
+                    if (results.length > 0) {
+                      resolve("Success Login");
+                    } else {
+                      reject("Password Incorrect");
+                    }
+                  }
+                }
+              );
+            } else {
+              reject("Email Incorrect");
+            }
+          }
+        });
+      }
+    });
+  },
   getUser: (numPage, limit, userId) => {
     if (!numPage && !limit) {
       if (userId) {

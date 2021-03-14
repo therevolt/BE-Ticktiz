@@ -52,7 +52,7 @@ module.exports = {
   delMovie: (req, res) => {
     movieModels.delMovie(req.params.movieId).then((result) => {
       if (result.affectedRows === 1) {
-        formatResult(res, 204, true, `success delete data id(${req.params.movieId})`, null);
+        formatResult(res, 200, true, `success delete data id(${req.params.movieId})`, null);
       } else {
         formatResult(res, 400, false, "movieId not found", null);
       }

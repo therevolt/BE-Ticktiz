@@ -16,6 +16,16 @@ module.exports = {
         }
       });
   },
+  loginUser: (req, res) => {
+    userModels
+      .loginUser(req.body.email, req.body.password)
+      .then((result) => {
+        formatResult(res, 200, true, result, null);
+      })
+      .catch((err) => {
+        formatResult(res, 400, false, err, null);
+      });
+  },
   getUser: (req, res) => {
     userModels
       .getUser(req.query.page, req.query.limit, req.params.userId)
