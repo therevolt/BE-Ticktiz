@@ -114,6 +114,17 @@ module.exports = {
       });
     }
   },
+  getMoviesByTitle: (title) => {
+    return new Promise((resolve, reject) => {
+      connection.query(`SELECT * FROM movies WHERE name LIKE '%${title}%'`, (err, result) => {
+        if (!err) {
+          resolve(result);
+        } else {
+          reject("movie not found");
+        }
+      });
+    });
+  },
   editMovieDetails: (body, movieId) => {
     return new Promise((resolve, reject) => {
       connection.query("UPDATE `movies` SET ? WHERE id = ? ", [body, movieId], (err, result) => {

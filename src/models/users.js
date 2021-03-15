@@ -38,7 +38,7 @@ module.exports = {
                 (errs, results) => {
                   if (!errs) {
                     if (results.length > 0) {
-                      resolve("Success Login");
+                      resolve(results);
                     } else {
                       reject("Password Incorrect");
                     }

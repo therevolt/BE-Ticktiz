@@ -26,6 +26,16 @@ module.exports = {
         }
       });
   },
+  getMoviesByTitle: (req, res) => {
+    movieModels
+      .getMoviesByTitle(req.query.title)
+      .then((result) => {
+        formatResult(res, 200, true, "success", result);
+      })
+      .catch((err) => {
+        formatResult(res, 404, false, err, null);
+      });
+  },
   editMovieDetails: (req, res) => {
     movieModels
       .editMovieDetails(req.body, req.params.movieId)

@@ -20,7 +20,7 @@ module.exports = {
     userModels
       .loginUser(req.body.email, req.body.password)
       .then((result) => {
-        formatResult(res, 200, true, result, null);
+        formatResult(res, 200, true, "Login Success", result);
       })
       .catch((err) => {
         formatResult(res, 400, false, err, null);
