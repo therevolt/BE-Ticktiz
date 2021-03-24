@@ -33,6 +33,8 @@ This is the repository Backend of the Bootcamp Arkademy task
 | ```PUT``` | /v1/tickets/:userId?ticketId=:ticketId | Edit Ticket By userID & ticketID |
 | ```DELETE``` | /v1/tickets/:userId?ticketId=:ticketId | Delete Ticket By userID & ticketID |
 
+### Other endpoints are still in the documentation process
+
 
 ## 💻 Installation
 
@@ -113,24 +115,7 @@ Object data contains content according to the request
 
 ## 💭 Documentation
 
-[Click Here](https://documenter.getpostman.com/view/10780576/Tz5jeLFz#de35d897-0209-4a28-b9d3-cd2225756a85)
-
-
-## 🎯 Target Assignment
-|Assignment | Status | Info |
-|:---------|:-------:|:----:|
-|Database|✅|DONE|
-|CRUD|✅|DONE|
-|Pencarian Tiket Film|✅|DONE|
-|Pengurutan Transaksi dan Tiket Film Berdasarkan Yang Terbaru|✅|DONE|
-|Pagination|✅| User, Ticket, Movie |
-|GitHub|✅|[Here](https://github.com/therevolt/BE-Ticktiz)|
-|Linter|✅|DONE|
-|Flowchart dari 1 Endpoint|✅|[Here](https://drive.google.com/drive/folders/1E4yWNIxbCZDeedrTu19iAa30sN_PQqkz?usp=sharing)
-|Error Handling|✅|DONE|
-|(Opsional) Dokumentasi Postman|✅|[Here](https://documenter.getpostman.com/view/10780576/Tz5jeLFz#780297f5-2766-41f8-adce-21ec23b0e0b7)
-|Cors|✅|DONE|
-|Env|✅|DONE|
+[Click Here](https://documenter.getpostman.com/view/10780576/TzCHAV8d)
 
 
 ## ✍️ Authors
