@@ -6,7 +6,7 @@ module.exports = {
     ticketModels
       .inputTicket(req.body)
       .then((result) => {
-        formatResult(res, 201, true, `success input`, result);
+        formatResult(res, 201, true, "success input", result);
       })
       .catch((err) => {
         if (err === "ticket already exists") {
@@ -40,7 +40,7 @@ module.exports = {
     ticketModels
       .deleteTicketByUserId(req.params.id)
       .then(() => {
-        formatResult(res, 200, true, `Success Delete Ticket`, null);
+        formatResult(res, 200, true, "Success Delete Ticket", null);
       })
       .catch((err) => {
         formatResult(res, 400, false, err, null);

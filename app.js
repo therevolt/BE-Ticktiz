@@ -29,5 +29,5 @@ app.use("*", (req, res) => {
 });
 
 app.on("disconnect", () => {
-  console.log(`Server Disconnected`);
+  console.log("Server Disconnected");
 });

@@ -115,7 +115,7 @@ module.exports = {
   },
   delMovie: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query("DELETE FROM `transactions` WHERE id = ?", id, (err, result) => {
+      connection.query("DELETE FROM `transactions` WHERE id = ?", id, (err) => {
         if (!err) {
           resolve("Success Delete Transaction");
         } else {

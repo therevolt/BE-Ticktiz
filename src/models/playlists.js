@@ -17,7 +17,7 @@ module.exports = {
       connection.query(
         "INSERT INTO `playlists` (`id`, `movie_id`, `cinema_id`, `playing_time`, `price`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, current_timestamp(), current_timestamp())",
         [body.movie_id, body.cinema_id, body.playing_time, body.price],
-        (err, result) => {
+        (err) => {
           if (!err) {
             resolve("Success Input");
           } else {

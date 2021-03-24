@@ -116,7 +116,7 @@ module.exports = {
       });
     });
   },
-  deleteTicketByUserId: (ticketId, userId) => {
+  deleteTicketByUserId: (ticketId) => {
     return new Promise((resolve, reject) => {
       connection.query("DELETE FROM `tickets` WHERE id = ?", [ticketId], (err) => {
         if (!err) {

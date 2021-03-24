@@ -6,6 +6,8 @@ module.exports = {
       connection.query("SELECT * FROM `cinemas`", (err, result) => {
         if (!err) {
           resolve(result);
+        } else {
+          reject(err.message);
         }
       });
     });
@@ -15,6 +17,8 @@ module.exports = {
       connection.query("SELECT * FROM `cinemas` WHERE id = ?", id, (err, result) => {
         if (!err) {
           resolve(result);
+        } else {
+          reject(err.message);
         }
       });
     });
@@ -24,7 +28,7 @@ module.exports = {
       connection.query(
         "INSERT INTO `cinemas` (`id`, `name`, `logo`, `address`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, current_timestamp(), current_timestamp())",
         [body.name, body.logo, body.address],
-        (err, result) => {
+        (err) => {
           if (!err) {
             connection.query(
               "SELECT * FROM `cinemas` WHERE name = ?",

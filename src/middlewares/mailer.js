@@ -10,15 +10,16 @@ let transporter = nodemailer.createTransport({
 });
 
 const sendMail = (mailTo, body) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     // send mail with defined transport object
     try {
-      let info = await transporter.sendMail({
-        from: process.env.EMAIL, // sender address
-        to: mailTo, // list of receivers
-        subject: "Tickitz Website", // Subject line
-        text: "Tickitz Website", // plain text body
-        html: `<body style="margin: 0; padding: 0;">
+      transporter
+        .sendMail({
+          from: process.env.EMAIL, // sender address
+          to: mailTo, // list of receivers
+          subject: "Tickitz Website", // Subject line
+          text: "Tickitz Website", // plain text body
+          html: `<body style="margin: 0; padding: 0;">
         <table cellpadding="0" cellspacing="0" width="100%">
          <tr>
           <td>
@@ -65,10 +66,14 @@ const sendMail = (mailTo, body) => {
          </tr>
         </table>
        </body>`, // html body
-      });
-
-      console.log("Message sent: %s", info.messageId);
-      resolve("Success! Please Check Your Email!");
+        })
+        .then((info) => {
+          console.log("Message sent: %s", info.messageId);
+          resolve("Success! Please Check Your Email!");
+        })
+        .catch((err) => {
+          reject(err);
+        });
     } catch (err) {
       reject("Failed!");
     }
