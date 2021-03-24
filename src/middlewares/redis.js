@@ -1,6 +1,7 @@
 const redis = require("redis");
 const formatResult = require("../helpers/formatResult");
 const movieModels = require("../models/movies");
+const getCinemas = require("../models/cinemas");
 const client = redis.createClient({ port: 6379 });
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
   getAllCinema: (req, res, next) => {
     client.get("cinema", (err, result) => {
       if (err || !result) {
-        getCinemas().then((result) => {
+        getCinemas.getCinemas().then((result) => {
           client.setex("cinema", 86400, JSON.stringify(result));
           formatResult(res, 200, true, "Success", result);
         });
