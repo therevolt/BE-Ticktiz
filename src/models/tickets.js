@@ -4,20 +4,13 @@ module.exports = {
   inputTicket: (body) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        "SELECT * FROM `ticket` WHERE movie_id = ? AND seat_count = ? AND seat_description = ?",
-        [body.movie_id, body.seat_count, body.seat_description],
+        "INSERT INTO `tickets` (`id`, `user_id`, `transactions_id`, `ordered_seat_id`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, current_timestamp(), current_timestamp())",
+        [body.user_id, body.transactions_id, body.ordered_seat_id],
         (err, result) => {
-          if (result.length < 1) {
+          if (!err) {
             connection.query(
-              "INSERT INTO `ticket` (`id`, `playing_time`, `movie_id`, `seat_count`, `seat_description`, `user_id`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, current_timestamp(), ?);",
-              [
-                body.playing_time,
-                body.movie_id,
-                body.seat_count,
-                body.seat_description,
-                body.user_id,
-                new Date(),
-              ],
+              "SELECT * FROM `tickets` WHERE id = ?",
+              result.insertId,
               (errs, results) => {
                 if (!errs) {
                   resolve(results);
@@ -27,221 +20,111 @@ module.exports = {
               }
             );
           } else {
-            reject("ticket already exists");
-          }
-        }
-      );
-    });
-  },
-  sortTicketByPlayingTime: (date1, date2, userId, by) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT * FROM ticket WHERE user_id = ? AND playing_time BETWEEN ? AND ? ORDER BY playing_time ${by}`,
-        [userId, date1, date2],
-        (err, result) => {
-          if (!err) {
-            if (result.length >= 1) {
-              resolve(result);
-            } else {
-              reject("result not found");
-            }
-          } else {
             reject(err.message);
           }
         }
       );
     });
   },
-  getDetailTicketByUserId: (numPage, limit, userId, by) => {
-    if (!numPage && !limit) {
-      return new Promise((resolve, reject) => {
+  getTicket: (query, role) => {
+    return new Promise((resolve, reject) => {
+      if (query.user_id) {
         connection.query(
-          `SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ${userId} LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id) ORDER BY ticket.playing_time ${by}`,
+          "SELECT * FROM `tickets` WHERE user_id = ?",
+          query.user_id,
           (err, result) => {
             if (!err) {
-              if (result.length > 0) {
-                resolve(result);
-              } else {
-                reject("data not found");
-              }
+              resolve(result);
             } else {
               reject(err.message);
             }
           }
         );
-      });
-    } else {
-      return new Promise((resolve, reject) => {
-        connection.query("SELECT * FROM `ticket`", (err, result) => {
-          if (!err) {
-            const pages = Math.ceil(parseInt(result.length) / parseInt(limit));
-            const query = `SELECT * FROM ticket WHERE user_id = ${userId} ORDER BY playing_time ${by} LIMIT ${
-              numPage - 1
-            },${limit}`;
-            connection.query(query, (errs, results) => {
-              if (parseInt(numPage) < pages) {
-                if (parseInt(numPage) === 1) {
-                  resolve({
-                    current_page: parseInt(numPage),
-                    obj_limit: parseInt(limit),
-                    max_page: pages,
-                    url_next_page: `${process.env.HOST}:${
-                      process.env.PORT
-                    }/v1/tickets/details/user/${userId}?page=${
-                      parseInt(numPage) + 1
-                    }&limit=${limit}`,
-                    url_prev_page: null,
-                    result: results,
-                  });
-                } else {
-                  resolve({
-                    current_page: parseInt(numPage),
-                    obj_limit: parseInt(limit),
-                    max_page: pages,
-                    url_next_page: `${process.env.HOST}:${
-                      process.env.PORT
-                    }/v1/tickets/details/user/${userId}?page=${
-                      parseInt(numPage) + 1
-                    }&limit=${limit}`,
-                    url_prev_page: `${process.env.HOST}:${
-                      process.env.PORT
-                    }/v1/tickets/details/user/${userId}?page=${
-                      parseInt(numPage) - 1
-                    }&limit=${limit}`,
-                    result: results,
-                  });
-                }
-              } else if (parseInt(numPage) >= pages) {
-                if (results.length === 0) {
-                  reject(null);
-                } else {
-                  resolve({
-                    current_page: parseInt(numPage),
-                    obj_limit: parseInt(limit),
-                    obj_count: results.length,
-                    max_page: pages,
-                    url_next_page: null,
-                    url_prev_page: null,
-                    result: results,
-                  });
-                }
-              } else {
-                resolve({
-                  current_page: parseInt(numPage),
-                  obj_limit: parseInt(limit),
-                  max_page: pages,
-                  url_next_page: null,
-                  url_prev_page: `${process.env.HOST}:${
-                    process.env.PORT
-                  }/v1/tickets/details/user/${userId}?page=${parseInt(numPage) - 1}&limit=${limit}`,
-                  result: results,
-                });
-              }
-            });
-          } else {
-            reject(err.message);
+      } else if (query.transactions_id) {
+        connection.query(
+          "SELECT * FROM `tickets` WHERE transactions_id = ?",
+          query.transactions_id,
+          (err, result) => {
+            if (!err) {
+              resolve(result);
+            } else {
+              reject(err.message);
+            }
           }
-        });
-      });
-    }
-  },
-  getDetailTicketByMovieId: (userId, movieId) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        "SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ? AND ticket.movie_id = ? LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id)",
-        [userId, movieId],
-        (err, result) => {
+        );
+      } else if (query.ordered_seat_id) {
+        connection.query(
+          "SELECT * FROM `tickets` WHERE ordered_seat_id = ?",
+          query.ordered_seat_id,
+          (err, result) => {
+            if (!err) {
+              resolve(result);
+            } else {
+              reject(err.message);
+            }
+          }
+        );
+      } else if (query.ticket_id) {
+        connection.query("SELECT * FROM `tickets` WHERE id = ?", query.ticket_id, (err, result) => {
           if (!err) {
             resolve(result);
           } else {
             reject(err.message);
           }
+        });
+      } else {
+        if (role === "admin") {
+          connection.query("SELECT * FROM `tickets`", (err, result) => {
+            if (!err) {
+              resolve(result);
+            } else {
+              reject(err.message);
+            }
+          });
+        } else {
+          reject("Admin Only");
         }
-      );
+      }
     });
   },
-  getTicketByFilmName: (name, userId) => {
+  updateTicketByUserId: (data, ticketId) => {
     return new Promise((resolve, reject) => {
-      if (name) {
-        connection.query(
-          "SELECT id FROM `movies` WHERE `name` LIKE ?",
-          `${name}%`,
-          (err, result) => {
-            if (result.length > 0) {
-              if (!err) {
+      connection.query("UPDATE `tickets` SET ? WHERE id = ?", [data, ticketId], (err) => {
+        if (!err) {
+          connection.query(
+            "UPDATE `tickets` SET `updated_at` = ? WHERE id = ?",
+            [new Date(), ticketId],
+            (errs) => {
+              if (!errs) {
                 connection.query(
-                  "SELECT ticket.id,movies.name,ticket.playing_time,movies.category,transaction.total_price,transaction.transaction_status,ticket.seat_count,ticket.seat_description FROM ((movies INNER JOIN ticket ON movies.id = (SELECT ticket.movie_id FROM ticket WHERE ticket.user_id = ? AND ticket.movie_id = ? LIMIT 1)) INNER JOIN transaction ON ticket.id = transaction.ticket_id)",
-                  [userId, result[0].id],
-                  (errs, results) => {
-                    if (!errs) {
-                      if (results.length > 0) {
-                        resolve(results);
-                      } else {
-                        reject("ticket not found");
-                      }
+                  "SELECT * FROM `tickets` WHERE id = ?",
+                  ticketId,
+                  (err2, result2) => {
+                    if (!err2) {
+                      resolve(result2);
                     } else {
-                      reject(err.message);
+                      reject(err2.message);
                     }
                   }
                 );
               } else {
-                reject(err.message);
+                reject(errs.message);
               }
-            } else {
-              reject("movie not found");
             }
-          }
-        );
-      }
-    });
-  },
-  getTicketById: (ticketId) => {
-    return new Promise((resolve, reject) => {
-      connection.query("SELECT * FROM `ticket` WHERE `id` = ?", [ticketId], (err, result) => {
-        if (!err) {
-          resolve(result);
-        } else {
-          reject(err.message);
+          );
         }
       });
     });
   },
-  updateTicketByUserId: (data, ticketId, userId) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        "UPDATE `ticket` SET ? WHERE id = ? AND user_id = ?",
-        [data, ticketId, userId],
-        (err) => {
-          if (!err) {
-            connection.query(
-              "UPDATE `ticket` SET `updated_at` = ? WHERE id = ? AND user_id = ?",
-              [new Date(), ticketId, userId],
-              (errs, results) => {
-                if (!errs) {
-                  resolve(results);
-                } else {
-                  reject(errs.message);
-                }
-              }
-            );
-          }
-        }
-      );
-    });
-  },
   deleteTicketByUserId: (ticketId, userId) => {
     return new Promise((resolve, reject) => {
-      connection.query(
-        "DELETE FROM `ticket` WHERE id = ? AND user_id = ?",
-        [ticketId, userId],
-        (err, result) => {
-          if (result) {
-            resolve(result.affectedRows);
-          } else {
-            reject(err.message);
-          }
+      connection.query("DELETE FROM `tickets` WHERE id = ?", [ticketId], (err) => {
+        if (!err) {
+          resolve(null);
+        } else {
+          reject(err.message);
         }
-      );
+      });
     });
   },
 };

@@ -2,15 +2,15 @@ const connection = require("../configs/configs");
 require("dotenv").config(); // Import env Config
 
 module.exports = {
-  inputTrx: (body) => {
+  inputOrder: (body) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        "INSERT INTO `transactions` (`id`, `total_price`, `unique_code`, `user_id`, `status`, `playlist_id`, `created_at`, `updated_at`) VALUES (NULL, ?, NULL, ?, ?, ?, current_timestamp(), current_timestamp())",
-        [body.total_price, body.user_id, body.status, body.playlist_id],
+        "INSERT INTO `ordered_seat` (`id`, `playlist_id`, `transaction_id`, `cinema_id`, `seat_row`, `seat_col`, `created_at`, `updated_at`) VALUES (NULL, ?, ?, ?, ?, ?, current_timestamp(), current_timestamp())",
+        [body.playlist_id, body.transaction_id, body.cinema_id, body.seat_row, body.seat_col],
         (err, result) => {
           if (!err) {
             connection.query(
-              "SELECT * FROM `transactions` WHERE id = ?",
+              "SELECT * FROM `ordered_seat` WHERE id = ?",
               result.insertId,
               (errs, results) => {
                 if (!errs) {
@@ -27,24 +27,12 @@ module.exports = {
       );
     });
   },
-  getTrx: (query, role) => {
+  getDetails: (query, role) => {
     return new Promise((resolve, reject) => {
-      if (query.user_id) {
+      if (query.order_id) {
         connection.query(
-          "SELECT * FROM `transactions` WHERE user_id = ?",
-          query.user_id,
-          (err, result) => {
-            if (!err) {
-              resolve(result);
-            } else {
-              reject(err.message);
-            }
-          }
-        );
-      } else if (query.trx_id) {
-        connection.query(
-          "SELECT * FROM `transactions` WHERE id = ?",
-          query.trx_id,
+          "SELECT * FROM `ordered_seat` WHERE id = ?",
+          query.order_id,
           (err, result) => {
             if (!err) {
               resolve(result);
@@ -55,7 +43,7 @@ module.exports = {
         );
       } else if (query.playlist_id) {
         connection.query(
-          "SELECT * FROM `transactions` WHERE playlist_id = ?",
+          "SELECT * FROM `ordered_seat` WHERE playlist_id = ?",
           query.playlist_id,
           (err, result) => {
             if (!err) {
@@ -65,10 +53,34 @@ module.exports = {
             }
           }
         );
-      } else if (query.status) {
+      } else if (query.transaction_id) {
         connection.query(
-          "SELECT * FROM `transactions` WHERE status = ?",
-          query.status,
+          "SELECT * FROM `ordered_seat` WHERE transaction_id = ?",
+          query.transaction_id,
+          (err, result) => {
+            if (!err) {
+              resolve(result);
+            } else {
+              reject(err.message);
+            }
+          }
+        );
+      } else if (query.cinema_id) {
+        connection.query(
+          "SELECT * FROM `ordered_seat` WHERE cinema_id = ?",
+          query.cinema_id,
+          (err, result) => {
+            if (!err) {
+              resolve(result);
+            } else {
+              reject(err.message);
+            }
+          }
+        );
+      } else if (query.seat_row && query.seat_col) {
+        connection.query(
+          "SELECT * FROM `ordered_seat` WHERE seat_row = ? AND seat_col = ?",
+          [query.seat_row, query.seat_col],
           (err, result) => {
             if (!err) {
               resolve(result);
@@ -79,27 +91,25 @@ module.exports = {
         );
       } else {
         if (role === "admin") {
-          connection.query("SELECT * FROM `transactions`", (err, result) => {
+          connection.query("SELECT * FROM `ordered_seat`", (err, result) => {
             if (!err) {
               resolve(result);
             } else {
               reject(err.message);
             }
           });
-        } else {
-          reject("Admin Only");
         }
       }
     });
   },
-  editTrx: (body, id) => {
+  updateDetailsOrder: (body, id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        "UPDATE `transactions` SET ? WHERE `transactions`.`id` = ?",
+        "UPDATE `ordered_seat` SET ? WHERE `ordered_seat`.`id` = ?",
         [body, id],
         (err) => {
           if (!err) {
-            connection.query("SELECT * FROM `transactions` WHERE id = ?", id, (errs, results) => {
+            connection.query("SELECT * FROM `ordered_seat` WHERE id = ?", id, (errs, results) => {
               if (!errs) {
                 resolve(results);
               } else {
@@ -113,11 +123,11 @@ module.exports = {
       );
     });
   },
-  delMovie: (id) => {
+  deleteOrder: (id) => {
     return new Promise((resolve, reject) => {
-      connection.query("DELETE FROM `transactions` WHERE id = ?", id, (err, result) => {
+      connection.query("DELETE FROM `ordered_seat` WHERE id = ?", id, (err) => {
         if (!err) {
-          resolve("Success Delete Transaction");
+          resolve("Success Delete Order History");
         } else {
           reject(err.message);
         }

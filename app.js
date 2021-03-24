@@ -11,12 +11,11 @@ const Routes = require("./src/routes/index");
 app.listen(port, () => {
   console.log(`\n App listening on port ${port} \n`);
 }); // Create listening app
-
 app.use(express.json()); // Body parse json
 app.use(express.urlencoded({ extended: false })); // body type
 app.use(cors());
 app.use(morgan("dev"));
-
+app.use("/avatar", express.static("./upload"));
 app.use("/v1", Routes);
 
 app.use("*", (req, res) => {
@@ -24,12 +23,6 @@ app.use("*", (req, res) => {
     res.status(405).json({
       status: false,
       message: "Method Not Allowed",
-      data: null,
-    });
-  } else {
-    res.status(404).json({
-      status: false,
-      message: "Endpoint Not Found",
       data: null,
     });
   }

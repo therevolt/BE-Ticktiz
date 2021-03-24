@@ -2,11 +2,11 @@ const express = require("express");
 const Route = express.Router();
 
 const trxControllers = require("../controllers/transactions");
+const { Auth, AuthAdmin } = require("../middlewares/auth");
 
-Route.post("/:userId", trxControllers.inputUser)
-  .get("/s/:userId", trxControllers.getAllTrx)
-  .get("/:userId", trxControllers.getTrxByStatus)
-  .put("/:trxId", trxControllers.editTrxById)
-  .delete("/:trxId", trxControllers.deleteTrxById);
+Route.post("/", Auth, trxControllers.inputTrx)
+  .get("/", Auth, trxControllers.getTrx)
+  .put("/:id", AuthAdmin, trxControllers.editTrx)
+  .delete("/:id", AuthAdmin, trxControllers.deleteTrx);
 
 module.exports = Route;

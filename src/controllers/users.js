@@ -1,12 +1,17 @@
 const userModels = require("../models/users");
 const formatResult = require("../helpers/formatResult");
+require("dotenv").config();
+let jwt = require("jsonwebtoken");
+const sendMail = require("../middlewares/mailer");
 
 module.exports = {
   inputUser: (req, res) => {
+    console.log(req.body);
     userModels
       .inputUser(req.body)
-      .then(() => {
-        formatResult(res, 201, true, "success register", req.body);
+      .then((result) => {
+        delete result[0].password;
+        formatResult(res, 201, true, "Success Register", result);
       })
       .catch((err) => {
         if (err === "email already registered") {
@@ -20,9 +25,25 @@ module.exports = {
     userModels
       .loginUser(req.body.email, req.body.password)
       .then((result) => {
-        formatResult(res, 200, true, "Login Success", result);
+        delete result[0].password;
+        formatResult(res, 200, true, "Login Success", [
+          {
+            ...result[0],
+            token: jwt.sign(JSON.parse(JSON.stringify(result[0])), process.env.SECRET_KEY, {
+              expiresIn: "1h",
+            }),
+            refreshToken: jwt.sign(
+              JSON.parse(JSON.stringify(result[0])),
+              process.env.SECRET_KEY_REFRESH,
+              {
+                expiresIn: "3d",
+              }
+            ),
+          },
+        ]);
       })
       .catch((err) => {
+        console.log(err);
         formatResult(res, 400, false, err, null);
       });
   },
@@ -30,7 +51,9 @@ module.exports = {
     userModels
       .getUser(req.query.page, req.query.limit, req.params.userId)
       .then((result) => {
+        console.log(result);
         if (result.length >= 1) {
+          delete result[0].password;
           formatResult(res, 200, true, `success ${result.length} data found`, result);
         } else if (typeof result === "object") {
           formatResult(res, 200, true, "success", result);
@@ -47,9 +70,11 @@ module.exports = {
       });
   },
   editUserByUserId: (req, res) => {
+    console.log(req.body);
     userModels
       .editUserByUserId(req.body, req.params.userId)
       .then((result) => {
+        delete result[0].password;
         formatResult(res, 200, true, "success update data", result);
       })
       .catch((err) => {
@@ -68,6 +93,40 @@ module.exports = {
         } else {
           formatResult(res, 404, false, err, null);
         }
+      });
+  },
+  resetPassword: (req, res) => {
+    userModels
+      .resetPassword(req.body)
+      .then((result) => {
+        delete result[0].password;
+        sendMail(
+          result[0].email,
+          `RESET PASSWORD ${process.env.HOST}:${
+            process.env.PORT
+          }/v1/users/confirmReset?token=${jwt.sign(
+            JSON.parse(JSON.stringify(result[0])),
+            process.env.SECRET_KEY_RESET,
+            { expiresIn: "1h" }
+          )}`
+        ).then((result) => {
+          formatResult(res, 200, true, result, null);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        formatResult(res, 400, false, err, null);
+      });
+  },
+  confirmResetPassword: (req, res) => {
+    userModels
+      .confirmResetPassword(req.body, req.email)
+      .then((result) => {
+        delete result[0].password;
+        formatResult(res, 200, true, "Success Reset Password", result);
+      })
+      .catch((err) => {
+        formatResult(res, 500, false, err, null);
       });
   },
 };

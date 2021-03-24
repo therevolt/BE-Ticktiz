@@ -1,11 +1,13 @@
 const movieModels = require("../models/movies");
 const formatResult = require("../helpers/formatResult");
+const { clearRedis } = require("../middlewares/redis");
 
 module.exports = {
   inputMovie: (req, res) => {
     movieModels
       .inputMovies(req.body)
       .then(() => {
+        clearRedis("movies");
         formatResult(res, 201, true, "success input 1 data", req.body);
       })
       .catch((err) => {
@@ -16,7 +18,7 @@ module.exports = {
     movieModels
       .getAllMovies(req.query.page, req.query.limit)
       .then((result) => {
-        formatResult(res, 200, true, "success", result);
+        formatResult(res, 200, true, "Success", result);
       })
       .catch((err) => {
         if (req.query.page && req.query.limit) {

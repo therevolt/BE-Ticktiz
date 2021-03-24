@@ -2,14 +2,11 @@ const express = require("express");
 const Route = express.Router();
 
 const ticketControllers = require("../controllers/tickets");
+const { Auth, AuthAdmin } = require("../middlewares/auth");
 
-Route.post("", ticketControllers.inputTicket)
-  .get("/:userId", ticketControllers.getTicketByFilmName)
-  .get("", ticketControllers.getTicketById)
-  .get("/details/user/:userId", ticketControllers.getDetailTicketByUserId)
-  .get("/details/movie/:userId", ticketControllers.getTicketByMovieId)
-  .get("/sort/:userId", ticketControllers.sortTicketByPlayingTime)
-  .put("/:userId", ticketControllers.updateTicketByUserId)
-  .delete("/:userId", ticketControllers.deleteTicketByUserId);
+Route.post("/", Auth, ticketControllers.inputTicket)
+  .get("/", Auth, ticketControllers.getTicket)
+  .put("/:id", AuthAdmin, ticketControllers.updateTicketByUserId)
+  .delete("/:id", AuthAdmin, ticketControllers.deleteTicketByUserId);
 
 module.exports = Route;

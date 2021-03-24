@@ -1,26 +1,45 @@
 const connection = require("../configs/configs");
+const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
   inputUser: (body) => {
     return new Promise((resolve, reject) => {
-      connection.query("SELECT * FROM `user` WHERE `email` = ?", body.email, (err, result) => {
+      connection.query("SELECT * FROM `users` WHERE `email` = ?", body.email, (err, result) => {
         if (!err) {
           if (result.length === 0) {
-            connection.query(
-              "INSERT INTO `user` (`first_name`, `last_name`, `email`, `password`, `updated_at`) VALUES (?,?,?,?,?)",
-              [body.first_name, body.last_name, body.email, body.password, new Date()],
-              (err, result) => {
-                if (!err) {
-                  resolve(result);
-                } else {
-                  reject(err.message);
-                }
+            bcrypt.hash(body.password, 10, function (error, hash) {
+              if (!error) {
+                connection.query(
+                  "INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `avatar`, `created_at`, `updated_at`) VALUES (?, ?, ?, ?, ?, ?, current_timestamp(), current_timestamp());",
+                  [uuidv4(), body.first_name, body.last_name, body.email, hash, body.avatar],
+                  (errs) => {
+                    if (!errs) {
+                      connection.query(
+                        "SELECT * FROM `users` WHERE email = ?",
+                        body.email,
+                        (err2, result2) => {
+                          if (!err2) {
+                            resolve(result2);
+                          } else {
+                            reject(err2.message);
+                          }
+                        }
+                      );
+                    } else {
+                      reject(err.message);
+                    }
+                  }
+                );
+              } else {
+                reject(error.message);
               }
-            );
+            });
           } else if (result.length) {
             reject("email already registered");
           }
         } else {
+          console.log(err);
           reject("bad request from data post");
         }
       });
@@ -29,22 +48,18 @@ module.exports = {
   loginUser: (email, pass) => {
     return new Promise((resolve, reject) => {
       if (email && pass) {
-        connection.query("SELECT * FROM `user` WHERE email = ?", email, (err, result) => {
+        connection.query("SELECT * FROM `users` WHERE email = ?", email, (err, result) => {
           if (!err) {
             if (result.length > 0) {
-              connection.query(
-                "SELECT * FROM `user` WHERE email = ? AND password = ?",
-                [email, pass],
-                (errs, results) => {
-                  if (!errs) {
-                    if (results.length > 0) {
-                      resolve(results);
-                    } else {
-                      reject("Password Incorrect");
-                    }
+              bcrypt.compare(pass, result[0].password, function (errCompare, resultCompare) {
+                if (!errCompare) {
+                  if (resultCompare) {
+                    resolve(result);
+                  } else {
+                    reject("Password Incorrect");
                   }
                 }
-              );
+              });
             } else {
               reject("Email Incorrect");
             }
@@ -58,7 +73,7 @@ module.exports = {
       if (userId) {
         console.log(userId);
         return new Promise((resolve, reject) => {
-          connection.query("SELECT * FROM `user` WHERE id = ?", [userId], (err, result) => {
+          connection.query("SELECT * FROM `users` WHERE id = ?", [userId], (err, result) => {
             if (!err) {
               resolve(result);
             } else {
@@ -68,7 +83,7 @@ module.exports = {
         });
       } else {
         return new Promise((resolve, reject) => {
-          connection.query("SELECT * FROM `user`", (err, result) => {
+          connection.query("SELECT * FROM `users`", (err, result) => {
             if (!err) {
               resolve(result);
             } else {
@@ -79,7 +94,7 @@ module.exports = {
       }
     } else {
       return new Promise((resolve, reject) => {
-        connection.query("SELECT * FROM `user`", (err, result) => {
+        connection.query("SELECT * FROM `users`", (err, result) => {
           if (!err) {
             const pages = Math.ceil(parseInt(result.length) / parseInt(limit));
             const query = `SELECT * FROM user LIMIT ${numPage - 1},${limit}`;
@@ -149,32 +164,73 @@ module.exports = {
   },
   editUserByUserId: (body, userId) => {
     return new Promise((resolve, reject) => {
-      connection.query("UPDATE `user` SET ? WHERE `user`.`id` = ?;", [body, userId], (err) => {
-        if (!err) {
-          connection.query(
-            "UPDATE `user` SET updated_at = ? WHERE `user`.`id` = ?",
-            [new Date(), userId],
-            (errs) => {
-              if (!errs) {
-                connection.query("SELECT * FROM `user` WHERE id = ?", userId, (error, result) => {
-                  if (!error) {
-                    resolve(result);
-                  }
-                });
+      if (body.password) {
+        bcrypt.hash(body.password, 10, function (error, hash) {
+          if (!error) {
+            body.password = hash;
+            connection.query(
+              "UPDATE `users` SET ? WHERE `users`.`id` = ?",
+              [body, userId],
+              (err) => {
+                if (!err) {
+                  connection.query(
+                    "UPDATE `users` SET updated_at = ? WHERE `users`.`id` = ?",
+                    [new Date(), userId],
+                    (errs) => {
+                      if (!errs) {
+                        connection.query(
+                          "SELECT * FROM `users` WHERE id = ?",
+                          userId,
+                          (error, result) => {
+                            if (!error) {
+                              resolve(result);
+                            }
+                          }
+                        );
+                      }
+                    }
+                  );
+                } else {
+                  reject(err.message);
+                }
               }
-            }
-          );
-        } else {
-          reject(err.message);
-        }
-      });
+            );
+          } else {
+            reject(error.message);
+          }
+        });
+      } else {
+        connection.query("UPDATE `users` SET ? WHERE `users`.`id` = ?", [body, userId], (err) => {
+          if (!err) {
+            connection.query(
+              "UPDATE `users` SET updated_at = ? WHERE `users`.`id` = ?",
+              [new Date(), userId],
+              (errs) => {
+                if (!errs) {
+                  connection.query(
+                    "SELECT * FROM `users` WHERE id = ?",
+                    userId,
+                    (error, result) => {
+                      if (!error) {
+                        resolve(result);
+                      }
+                    }
+                  );
+                }
+              }
+            );
+          } else {
+            reject(err.message);
+          }
+        });
+      }
     });
   },
   deleteUserByUserId: (userId) => {
     return new Promise((resolve, reject) => {
-      connection.query("SELECT * FROM `user` WHERE id = ?", userId, (err, result) => {
+      connection.query("SELECT * FROM `users` WHERE id = ?", userId, (err, result) => {
         if (!err && result.length > 0) {
-          connection.query("DELETE FROM `user` WHERE id = ?", userId, (errs) => {
+          connection.query("DELETE FROM `users` WHERE id = ?", userId, (errs) => {
             if (!errs) {
               resolve(null);
             } else {
@@ -182,7 +238,7 @@ module.exports = {
                 if (!error) {
                   connection.query("DELETE FROM `ticket` WHERE user_id = ?", userId, (err2) => {
                     if (!err2) {
-                      connection.query("DELETE FROM `user` WHERE id = ?", userId, (errs2) => {
+                      connection.query("DELETE FROM `users` WHERE id = ?", userId, (errs2) => {
                         if (!errs2) {
                           resolve(null);
                         } else {
@@ -197,6 +253,55 @@ module.exports = {
           });
         } else {
           reject("user not found");
+        }
+      });
+    });
+  },
+  resetPassword: (body) => {
+    return new Promise((resolve, reject) => {
+      connection.query("SELECT * FROM `users` WHERE email = ?", body.email, (err, result) => {
+        if (!err && result.length > 0) {
+          resolve(result);
+        } else {
+          reject("Email Not Found");
+        }
+      });
+    });
+  },
+  confirmResetPassword: (body, email) => {
+    return new Promise((resolve, reject) => {
+      bcrypt.hash(body.password, 10, function (error, hash) {
+        if (!error) {
+          body.password = hash;
+          connection.query(
+            "UPDATE `users` SET ? WHERE `users`.`email` = ?",
+            [body, email],
+            (err) => {
+              if (!err) {
+                connection.query(
+                  "UPDATE `users` SET updated_at = ? WHERE `users`.`email` = ?",
+                  [new Date(), email],
+                  (errs) => {
+                    if (!errs) {
+                      connection.query(
+                        "SELECT * FROM `users` WHERE email = ?",
+                        email,
+                        (error, result) => {
+                          if (!error) {
+                            resolve(result);
+                          }
+                        }
+                      );
+                    }
+                  }
+                );
+              } else {
+                reject(err.message);
+              }
+            }
+          );
+        } else {
+          reject(error.message);
         }
       });
     });

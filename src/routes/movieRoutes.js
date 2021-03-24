@@ -2,12 +2,16 @@ const express = require("express");
 const Route = express.Router();
 
 const movieControllers = require("../controllers/movies");
+const { AuthAdmin } = require("../middlewares/auth");
+const middleUpload = require("../middlewares/upload");
 
-Route.post("/", movieControllers.inputMovie)
+// const { getAllMovie } = require("../middlewares/redis");
+
+Route.post("/", AuthAdmin, movieControllers.inputMovie)
   .get("/", movieControllers.getAllMovies)
   .get("/search", movieControllers.getMoviesByTitle)
   .get("/:movieId", movieControllers.getMovieDetails)
-  .put("/:movieId", movieControllers.editMovieDetails)
-  .delete("/:movieId", movieControllers.delMovie);
+  .put("/:movieId", AuthAdmin, middleUpload("image"), movieControllers.editMovieDetails)
+  .delete("/:movieId", AuthAdmin, movieControllers.delMovie);
 
 module.exports = Route;
