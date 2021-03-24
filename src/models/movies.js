@@ -165,4 +165,25 @@ module.exports = {
       });
     });
   },
+  setNowShowing: (movieId) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "UPDATE `movies` SET `showing` = '1' WHERE `movies`.`id` = ?",
+        movieId,
+        (err) => {
+          if (!err) {
+            connection.query("SELECT * FROM `movies` WHERE id = ?", movieId, (err2, result) => {
+              if (!err2) {
+                resolve(result);
+              } else {
+                reject(err2.message);
+              }
+            });
+          } else {
+            reject(err.message);
+          }
+        }
+      );
+    });
+  },
 };

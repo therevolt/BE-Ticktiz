@@ -11,7 +11,7 @@ module.exports = {
         formatResult(res, 201, true, "success input 1 data", req.body);
       })
       .catch((err) => {
-        formatResult(res, 400, false, err, null);
+        formatResult(res, 404, false, err, null);
       });
   },
   getAllMovies: (req, res) => {
@@ -45,29 +45,49 @@ module.exports = {
         formatResult(res, 200, true, `${result.length} data has been updated`, result);
       })
       .catch((err) => {
-        formatResult(res, 400, false, err, null);
+        formatResult(res, 404, false, err, null);
       });
   },
   getMovieDetails: (req, res) => {
-    movieModels.getMovieDetails(req.params.movieId).then((result) => {
-      if (result.length > 0) {
-        if (result.length === 1) {
-          formatResult(res, 200, true, `${result.length} data found`, result);
+    movieModels
+      .getMovieDetails(req.params.movieId)
+      .then((result) => {
+        if (result.length > 0) {
+          if (result.length === 1) {
+            formatResult(res, 200, true, `${result.length} data found`, result);
+          } else {
+            formatResult(res, 200, true, `${result.length} data found`, result);
+          }
         } else {
-          formatResult(res, 200, true, `${result.length} data found`, result);
+          formatResult(res, 404, false, "movieId not found", null);
         }
-      } else {
-        formatResult(res, 400, false, "movieId not found", null);
-      }
-    });
+      })
+      .catch((err) => {
+        formatResult(res, 500, false, err, null);
+      });
   },
   delMovie: (req, res) => {
-    movieModels.delMovie(req.params.movieId).then((result) => {
-      if (result.affectedRows === 1) {
-        formatResult(res, 200, true, `success delete data id(${req.params.movieId})`, null);
-      } else {
-        formatResult(res, 400, false, "movieId not found", null);
-      }
-    });
+    movieModels
+      .delMovie(req.params.movieId)
+      .then((result) => {
+        if (result.affectedRows === 1) {
+          formatResult(res, 200, true, `success delete data id(${req.params.movieId})`, null);
+        } else {
+          formatResult(res, 404, false, "movieId not found", null);
+        }
+      })
+      .catch((err) => {
+        formatResult(res, 500, false, err, null);
+      });
+  },
+  setNowShowing: (req, res) => {
+    movieModels
+      .setNowShowing(req.params.movieId)
+      .then((result) => {
+        formatResult(res, 200, true, "Success Set Now Showing Movie", result);
+      })
+      .catch((err) => {
+        formatResult(res, 500, false, err, null);
+      });
   },
 };

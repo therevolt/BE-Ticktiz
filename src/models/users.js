@@ -39,7 +39,6 @@ module.exports = {
             reject("email already registered");
           }
         } else {
-          console.log(err);
           reject("bad request from data post");
         }
       });
@@ -71,7 +70,6 @@ module.exports = {
   getUser: (numPage, limit, userId) => {
     if (!numPage && !limit) {
       if (userId) {
-        console.log(userId);
         return new Promise((resolve, reject) => {
           connection.query("SELECT * FROM `users` WHERE id = ?", [userId], (err, result) => {
             if (!err) {
@@ -302,6 +300,37 @@ module.exports = {
           );
         } else {
           reject(error.message);
+        }
+      });
+    });
+  },
+  verifyUser: (body) => {
+    return new Promise((resolve, reject) => {
+      connection.query("SELECT * FROM `users` WHERE email = ?", body.email, (err, result) => {
+        if (!err && result.length > 0) {
+          connection.query(
+            "UPDATE `users` SET `active` = '1' WHERE email = ?",
+            body.email,
+            (err2) => {
+              if (!err2) {
+                connection.query(
+                  "SELECT * FROM `users` WHERE email = ?",
+                  body.email,
+                  (err3, result3) => {
+                    if (!err3) {
+                      resolve(result3);
+                    } else {
+                      reject(err3.message);
+                    }
+                  }
+                );
+              } else {
+                reject(err2.message);
+              }
+            }
+          );
+        } else {
+          reject("Email Not Found");
         }
       });
     });

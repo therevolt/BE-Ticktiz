@@ -23,13 +23,23 @@ module.exports = {
       });
   },
   editTrx: (req, res) => {
-    trxModels.editTrx(req.body, req.params.id).then((result) => {
-      formatResult(res, 200, true, "Success Update Transaction", result);
-    });
+    trxModels
+      .editTrx(req.body, req.params.id)
+      .then((result) => {
+        formatResult(res, 200, true, "Success Update Transaction", result);
+      })
+      .catch((err) => {
+        formatResult(res, 500, false, err, null);
+      });
   },
   deleteTrx: (req, res) => {
-    trxModels.delMovie(req.params.id).then((result) => {
-      formatResult(res, 200, true, result, null);
-    });
+    trxModels
+      .delMovie(req.params.id)
+      .then((result) => {
+        formatResult(res, 200, true, result, null);
+      })
+      .catch((err) => {
+        formatResult(res, 500, false, err, null);
+      });
   },
 };

@@ -12,6 +12,7 @@ Route.post("/", AuthAdmin, movieControllers.inputMovie)
   .get("/search", movieControllers.getMoviesByTitle)
   .get("/:movieId", movieControllers.getMovieDetails)
   .put("/:movieId", AuthAdmin, middleUpload("image"), movieControllers.editMovieDetails)
+  .put("/showing/:movieId", AuthAdmin, movieControllers.setNowShowing)
   .delete("/:movieId", AuthAdmin, movieControllers.delMovie);
 
 module.exports = Route;

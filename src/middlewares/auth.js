@@ -73,4 +73,27 @@ const AuthReset = (req, res, next) => {
   }
 };
 
-module.exports = { Auth, AuthAdmin, AuthReset };
+const AuthVerify = (req, res, next) => {
+  const auth = req.query.token;
+  console.log(req.query);
+  if (auth) {
+    jwt.verify(auth, process.env.SECRET_KEY_CONFIRM, function (err, decoded) {
+      if (!err) {
+        req.body = decoded;
+        next();
+      } else {
+        if (err.message === "jwt malformed") {
+          formatResult(res, 500, false, "Invalid Token", null);
+        } else if (err.message === "jwt expired") {
+          formatResult(res, 500, false, "Token Expired", null);
+        } else {
+          formatResult(req, 500, false, "Invalid Signature", null);
+        }
+      }
+    });
+  } else {
+    formatResult(res, 500, false, "Unauthorized", "Token Needed");
+  }
+};
+
+module.exports = { Auth, AuthAdmin, AuthReset, AuthVerify };
