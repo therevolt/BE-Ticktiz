@@ -111,6 +111,12 @@ Object data contains content according to the request
 - [Morgan Package](https://www.npmjs.com/package/morgan)
 - [DotEnv Package](https://www.npmjs.com/package/dotenv)
 - [Nodemon Package](https://www.npmjs.com/package/nodemon)
+- [Redis Package](https://www.npmjs.com/package/redis)
+- [JWT Package](https://www.npmjs.com/package/jsonwebtoken)
+- [Nodemailer Package](https://www.npmjs.com/package/nodemailer)
+- [UUID Package](https://www.npmjs.com/package/uuid)
+- [Multer Package](https://www.npmjs.com/package/multer)
+- [Bcrypt Package](https://www.npmjs.com/package/bcrypt)
 
 
 ## 💭 Documentation
