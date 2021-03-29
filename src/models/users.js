@@ -11,8 +11,8 @@ module.exports = {
             bcrypt.hash(body.password, 10, function (error, hash) {
               if (!error) {
                 connection.query(
-                  "INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `avatar`, `created_at`, `updated_at`) VALUES (?, ?, ?, ?, ?, ?, current_timestamp(), current_timestamp());",
-                  [uuidv4(), body.first_name, body.last_name, body.email, hash, body.avatar],
+                  "INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `created_at`, `updated_at`) VALUES (?, ?, ?, ?, ?, current_timestamp(), current_timestamp());",
+                  [uuidv4(), body.first_name, body.last_name, body.email, hash],
                   (errs) => {
                     if (!errs) {
                       connection.query(
@@ -27,7 +27,7 @@ module.exports = {
                         }
                       );
                     } else {
-                      reject(err.message);
+                      reject(errs.message);
                     }
                   }
                 );

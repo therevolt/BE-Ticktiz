@@ -4,7 +4,7 @@ require("dotenv").config(); // Import env Config
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    if (req.route.path === "/:movieId") {
+    if (req.route.path === "/:movieId" || req.route.stack[2].name === "inputMovie") {
       req.body.image = `${process.env.HOST}:${process.env.PORT}${process.env.STATIC_FOLDER}/${
         Date.now() + "_" + file.originalname
       }`;
@@ -25,7 +25,7 @@ const upload = (name) =>
     storage: storage,
     limits: {
       // fieldSize: 20000,
-      fileSize: 15000000,
+      fileSize: 5000000,
     },
     fileFilter: (req, file, cb) => {
       if (
@@ -44,7 +44,12 @@ const upload = (name) =>
 const middleUpload = (key) => (req, res, next) => {
   upload(key)(req, res, (err) => {
     if (err) {
-      formatResult(res, 500, false, "file not uploaded since it's not a image file", null);
+      console.log(err.message);
+      if (err.message) {
+        formatResult(res, 400, false, err.message, null);
+      } else {
+        formatResult(res, 400, false, "Only .png, .jpg and .jpeg format allowed!", null);
+      }
     } else {
       next();
     }
