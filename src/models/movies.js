@@ -53,7 +53,8 @@ module.exports = {
         connection.query("SELECT * FROM `movies`", (err, result) => {
           if (!err) {
             const pages = Math.ceil(parseInt(result.length) / parseInt(limit));
-            const query = "SELECT * FROM `movies` LIMIT " + `${numPage - 1},${limit}`;
+            const offset = (parseInt(numPage) - 1) * parseInt(limit);
+            const query = `SELECT * FROM movies LIMIT ${limit} OFFSET ${offset}`;
             connection.query(query, (errs, results) => {
               if (parseInt(numPage) < pages) {
                 if (parseInt(numPage) === 1) {

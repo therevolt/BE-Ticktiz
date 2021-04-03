@@ -6,6 +6,7 @@ const { Auth, AuthAdmin } = require("../middlewares/auth");
 
 Route.post("/", Auth, ticketControllers.inputTicket)
   .get("/", Auth, ticketControllers.getTicket)
+  .post("/details", Auth, ticketControllers.getTicketByTrxID)
   .put("/:id", AuthAdmin, ticketControllers.updateTicketByUserId)
   .delete("/:id", AuthAdmin, ticketControllers.deleteTicketByUserId);
 

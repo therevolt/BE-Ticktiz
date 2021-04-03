@@ -26,12 +26,12 @@ module.exports = {
       );
     });
   },
-  getTicket: (query, role) => {
+  getTicket: (query, role, id) => {
     return new Promise((resolve, reject) => {
-      if (query.user_id) {
+      if (id) {
         connection.query(
-          "SELECT * FROM `tickets` WHERE user_id = ?",
-          query.user_id,
+          "SELECT playlists.playing_time, tickets.status, cinemas.logo AS cinemas, movies.name AS movies, tickets.created_at AS order_time FROM tickets INNER JOIN ordered_seat ON tickets.ordered_seat_id = ordered_seat.id INNER JOIN cinemas ON ordered_seat.cinema_id = cinemas.id INNER JOIN playlists ON ordered_seat.playlist_id = playlists.id INNER JOIN movies ON playlists.movie_id WHERE tickets.user_id = ? GROUP BY tickets.created_at",
+          id,
           (err, result) => {
             if (!err) {
               resolve(result);
@@ -85,6 +85,20 @@ module.exports = {
           reject("Admin Only");
         }
       }
+    });
+  },
+  getTicketByTrxID: (trxId) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT transactions.total_price, transactions.playlist_id, playlists.movie_id, playlists.cinema_id, playlists.playing_time, movies.name, movies.category, CONCAT(ordered_seat.seat_row,ordered_seat.seat_col) AS seat FROM tickets JOIN transactions ON tickets.transactions_id = transactions.id JOIN playlists ON playlists.id = transactions.playlist_id JOIN movies ON movies.id = playlists.movie_id JOIN ordered_seat ON ordered_seat.transaction_id = transactions.id WHERE transactions.id = ${trxId} GROUP BY seat`,
+        (err, result) => {
+          if (!err) {
+            resolve(result);
+          } else {
+            reject(err.message);
+          }
+        }
+      );
     });
   },
   updateTicketByUserId: (data, ticketId) => {

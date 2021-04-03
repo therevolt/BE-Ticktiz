@@ -92,6 +92,35 @@ module.exports = {
         }
       });
   },
+  getUserByToken: (req, res) => {
+    jwt.verify(
+      req.headers["authorization"].split(" ")[1],
+      process.env.SECRET_KEY,
+      (err, result) => {
+        if (!err) {
+          userModels
+            .getUser(null, null, result.id)
+            .then((result) => {
+              if (result.length >= 1) {
+                delete result[0].password;
+                formatResult(res, 200, true, `success ${result.length} data found`, result);
+              } else if (typeof result === "object") {
+                formatResult(res, 200, true, "success", result);
+              } else {
+                formatResult(res, 404, false, "data not found", null);
+              }
+            })
+            .catch((err) => {
+              if (req.query.page && req.query.limit) {
+                formatResult(res, 409, false, "Page or limit exceeds the existing data", err);
+              } else {
+                formatResult(res, 500, false, "Internal Server Error", err);
+              }
+            });
+        }
+      }
+    );
+  },
   editUserByUserId: (req, res) => {
     console.log(req.body);
     userModels

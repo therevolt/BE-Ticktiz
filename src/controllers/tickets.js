@@ -1,5 +1,6 @@
 const ticketModels = require("../models/tickets");
 const formatResult = require("../helpers/formatResult");
+let jwt = require("jsonwebtoken");
 
 module.exports = {
   inputTicket: (req, res) => {
@@ -17,13 +18,43 @@ module.exports = {
       });
   },
   getTicket: (req, res) => {
+    jwt.verify(
+      req.headers["authorization"].split(" ")[1],
+      process.env.SECRET_KEY,
+      (err, result) => {
+        if (!err) {
+          ticketModels
+            .getTicket(req.query, req.role, result.id)
+            .then((result) => {
+              formatResult(res, 200, true, "Success", result);
+            })
+            .catch((err) => {
+              formatResult(res, 500, true, err, null);
+            });
+        }
+      }
+    );
+  },
+  getTicketByTrxID: (req, res) => {
     ticketModels
-      .getTicket(req.query, req.role)
+      .getTicketByTrxID(req.body.transactions_id)
       .then((result) => {
-        formatResult(res, 200, true, "Success", result);
+        const dataResult = [
+          {
+            total_price: result[0].total_price,
+            playlist_id: result[0].playlist_id,
+            movie_id: result[0].movie_id,
+            cinema_id: result[0].cinema_id,
+            name: result[0].name,
+            playing_time: result[0].playing_time,
+            category: result[0].category,
+            seat: result.map((item) => item.seat),
+          },
+        ];
+        formatResult(res, 200, true, "Success Get Ticket", dataResult);
       })
       .catch((err) => {
-        formatResult(res, 500, true, err, null);
+        formatResult(res, 400, false, err, null);
       });
   },
   updateTicketByUserId: (req, res) => {

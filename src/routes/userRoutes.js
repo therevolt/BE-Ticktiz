@@ -7,6 +7,7 @@ const middleUpload = require("../middlewares/upload");
 Route.post("/", middleUpload("avatar"), userControllers.inputUser)
   .get("/verify", AuthVerify, userControllers.verifyUser)
   .get("/", Auth, userControllers.getUser)
+  .get("/profile", Auth, userControllers.getUserByToken)
   .put("/:userId", Auth, middleUpload("avatar"), userControllers.editUserByUserId)
   .get("/:userId", Auth, userControllers.getUser)
   .delete("/:userId", AuthAdmin, userControllers.deleteUserByUserId)
