@@ -104,7 +104,7 @@ module.exports = {
                     obj_limit: parseInt(limit),
                     obj_count: results.length,
                     max_page: pages,
-                    url_next_page: `${process.env.HOST}:${process.env.PORT}/v1/users?page=${
+                    url_next_page: `${process.env.HOST}/v1/users?page=${
                       parseInt(numPage) + 1
                     }&limit=${limit}`,
                     url_prev_page: null,
@@ -116,10 +116,10 @@ module.exports = {
                     obj_limit: parseInt(limit),
                     obj_count: results.length,
                     max_page: pages,
-                    url_next_page: `${process.env.HOST}:${process.env.PORT}/v1/users?page=${
+                    url_next_page: `${process.env.HOST}/v1/users?page=${
                       parseInt(numPage) + 1
                     }&limit=${limit}`,
-                    url_prev_page: `${process.env.HOST}:${process.env.PORT}/v1/users?page=${
+                    url_prev_page: `${process.env.HOST}/v1/users?page=${
                       parseInt(numPage) - 1
                     }&limit=${limit}`,
                     result: results,
@@ -146,7 +146,7 @@ module.exports = {
                   obj_count: results.length,
                   max_page: pages,
                   url_next_page: null,
-                  url_prev_page: `${process.env.HOST}:${process.env.PORT}/v1/users?page=${
+                  url_prev_page: `${process.env.HOST}/v1/users?page=${
                     parseInt(numPage) - 1
                   }&limit=${limit}`,
                   result: results,

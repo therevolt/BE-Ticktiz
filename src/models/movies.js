@@ -62,7 +62,7 @@ module.exports = {
                     current_page: parseInt(numPage),
                     obj_limit: parseInt(limit),
                     max_page: pages,
-                    url_next_page: `${process.env.HOST}:${process.env.PORT}/v1/movies?page=${
+                    url_next_page: `${process.env.HOST}/v1/movies?page=${
                       parseInt(numPage) + 1
                     }&limit=${limit}`,
                     url_prev_page: null,
@@ -73,10 +73,10 @@ module.exports = {
                     current_page: parseInt(numPage),
                     obj_limit: parseInt(limit),
                     max_page: pages,
-                    url_next_page: `${process.env.HOST}:${process.env.PORT}/v1/movies?page=${
+                    url_next_page: `${process.env.HOST}/v1/movies?page=${
                       parseInt(numPage) + 1
                     }&limit=${limit}`,
-                    url_prev_page: `${process.env.HOST}:${process.env.PORT}/v1/movies?page=${
+                    url_prev_page: `${process.env.HOST}/v1/movies?page=${
                       parseInt(numPage) - 1
                     }&limit=${limit}`,
                     result: results,
@@ -102,7 +102,7 @@ module.exports = {
                   obj_limit: parseInt(limit),
                   max_page: pages,
                   url_next_page: null,
-                  url_prev_page: `${process.env.HOST}:${process.env.PORT}/v1/movies?page=${
+                  url_prev_page: `${process.env.HOST}/v1/movies?page=${
                     parseInt(numPage) - 1
                   }&limit=${limit}`,
                   result: results,
