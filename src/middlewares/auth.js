@@ -12,16 +12,16 @@ const Auth = (req, res, next) => {
         next();
       } else {
         if (err.message === "jwt malformed") {
-          formatResult(res, 500, false, "Invalid Token", null);
+          formatResult(res, 400, false, "Invalid Token", null);
         } else if (err.message === "jwt expired") {
-          formatResult(res, 500, false, "Token Expired", null);
+          formatResult(res, 400, false, "Token Expired", null);
         } else {
-          formatResult(req, 500, false, "Invalid Signature", null);
+          formatResult(req, 400, false, "Invalid Signature", null);
         }
       }
     });
   } else {
-    formatResult(res, 500, false, "Unauthorized", "Token Needed");
+    formatResult(res, 400, false, "Unauthorized", "Token Needed");
   }
 };
 
@@ -34,20 +34,20 @@ const AuthAdmin = (req, res, next) => {
         if (decoded.role === "admin") {
           next();
         } else {
-          formatResult(res, 500, false, "Admin Only", null);
+          formatResult(res, 400, false, "Admin Only", null);
         }
       } else {
         if (err.message === "jwt malformed") {
-          formatResult(res, 500, false, "Invalid Token", null);
+          formatResult(res, 400, false, "Invalid Token", null);
         } else if (err.message === "jwt expired") {
-          formatResult(res, 500, false, "Token Expired", null);
+          formatResult(res, 400, false, "Token Expired", null);
         } else {
-          formatResult(req, 500, false, "Invalid Signature", null);
+          formatResult(req, 400, false, "Invalid Signature", null);
         }
       }
     });
   } else {
-    formatResult(res, 500, false, "Unauthorized", "Token Needed");
+    formatResult(res, 400, false, "Unauthorized", "Token Needed");
   }
 };
 
@@ -60,16 +60,16 @@ const AuthReset = (req, res, next) => {
         next();
       } else {
         if (err.message === "jwt malformed") {
-          formatResult(res, 500, false, "Invalid Token", null);
+          formatResult(res, 400, false, "Invalid Token", null);
         } else if (err.message === "jwt expired") {
-          formatResult(res, 500, false, "Token Expired", null);
+          formatResult(res, 400, false, "Token Expired", null);
         } else {
-          formatResult(req, 500, false, "Invalid Signature", null);
+          formatResult(req, 400, false, "Invalid Signature", null);
         }
       }
     });
   } else {
-    formatResult(res, 500, false, "Unauthorized", "Token Needed");
+    formatResult(res, 400, false, "Unauthorized", "Token Needed");
   }
 };
 
@@ -83,16 +83,16 @@ const AuthVerify = (req, res, next) => {
         next();
       } else {
         if (err.message === "jwt malformed") {
-          formatResult(res, 500, false, "Invalid Token", null);
+          formatResult(res, 400, false, "Invalid Token", null);
         } else if (err.message === "jwt expired") {
-          formatResult(res, 500, false, "Token Expired", null);
+          formatResult(res, 400, false, "Token Expired", null);
         } else {
-          formatResult(req, 500, false, "Invalid Signature", null);
+          formatResult(req, 400, false, "Invalid Signature", null);
         }
       }
     });
   } else {
-    formatResult(res, 500, false, "Unauthorized", "Token Needed");
+    formatResult(res, 400, false, "Unauthorized", "Token Needed");
   }
 };
 
