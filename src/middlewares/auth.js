@@ -75,7 +75,6 @@ const AuthReset = (req, res, next) => {
 
 const AuthVerify = (req, res, next) => {
   const auth = req.query.token;
-  console.log(req.query);
   if (auth) {
     jwt.verify(auth, process.env.SECRET_KEY_CONFIRM, function (err, decoded) {
       if (!err) {

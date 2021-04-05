@@ -68,7 +68,6 @@ const sendMail = (mailTo, body) => {
        </body>`, // html body
         })
         .then((info) => {
-          console.log("Message sent: %s", info.messageId);
           resolve("Success! Please Check Your Email!");
         })
         .catch((err) => {

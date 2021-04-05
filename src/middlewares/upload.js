@@ -44,7 +44,6 @@ const upload = (name) =>
 const middleUpload = (key) => (req, res, next) => {
   upload(key)(req, res, (err) => {
     if (err) {
-      console.log(err.message);
       if (err.message) {
         formatResult(res, 400, false, err.message, null);
       } else {

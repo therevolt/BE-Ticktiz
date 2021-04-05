@@ -122,7 +122,6 @@ module.exports = {
     );
   },
   editUserByUserId: (req, res) => {
-    console.log(req.body);
     userModels
       .editUserByUserId(req.body, req.params.userId)
       .then((result) => {
