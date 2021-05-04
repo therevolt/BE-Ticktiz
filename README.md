@@ -125,6 +125,10 @@ Object data contains content according to the request
 
 Repo Frontend : https://github.com/therevolt/ReactJS-FE-Tickitz
 
+## 💻 Live Demo
+
+[Netlify](https://tickitz-web.netlify.app/)
+
 ## ✍️ Authors
 
 - [@therevolt](https://github.com/therevolt)
