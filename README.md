@@ -121,6 +121,13 @@ Object data contains content according to the request
 
 [Click Here](https://documenter.getpostman.com/view/10780576/TzCHAV8d)
 
+## 💻 FrontEnd
+
+Repo Frontend : https://github.com/therevolt/ReactJS-FE-Tickitz
+
+## 💻 Live Demo
+
+[Netlify](https://tickitz-web.netlify.app/)
 
 ## ✍️ Authors
 
