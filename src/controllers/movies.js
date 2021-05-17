@@ -6,9 +6,9 @@ module.exports = {
   inputMovie: (req, res) => {
     movieModels
       .inputMovies(req.body)
-      .then(() => {
+      .then((result) => {
         clearRedis("movies");
-        formatResult(res, 201, true, "success input 1 data", req.body);
+        formatResult(res, 201, true, "success input 1 data", { id: result.insertId, ...req.body });
       })
       .catch((err) => {
         formatResult(res, 404, false, err, null);

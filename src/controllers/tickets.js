@@ -1,6 +1,8 @@
 const ticketModels = require("../models/tickets");
 const formatResult = require("../helpers/formatResult");
 let jwt = require("jsonwebtoken");
+const convertMonth = require("../helpers/convertMonth");
+const format2Digit = require("../helpers/formatTime");
 
 module.exports = {
   inputTicket: (req, res) => {
@@ -29,11 +31,35 @@ module.exports = {
               formatResult(res, 200, true, "Success", result);
             })
             .catch((err) => {
-              formatResult(res, 500, true, err, null);
+              formatResult(res, 500, false, err, null);
             });
         }
       }
     );
+  },
+  getDetailTicket: (req, res) => {
+    ticketModels
+      .getDetailsTicket(req.query.trxId)
+      .then((result) => {
+        const dataResult = {
+          movie: result[0].name,
+          date: `${new Date(result[0].playing_time).getDate()} ${convertMonth(
+            new Date(result[0].playing_time).getMonth(),
+            "short"
+          )}`,
+          time: `${format2Digit(new Date(result[0].playing_time).getHours())}:${format2Digit(
+            new Date(result[0].playing_time).getMinutes()
+          )}`,
+          category: result[0].category,
+          count: result.length,
+          seats: result.map((item) => item.seat).join(", "),
+          price: result[0].total_price,
+        };
+        formatResult(res, 200, true, "Success Get Detail Ticket", dataResult);
+      })
+      .catch((err) => {
+        formatResult(res, 400, false, err, null);
+      });
   },
   getTicketByTrxID: (req, res) => {
     ticketModels
@@ -46,7 +72,27 @@ module.exports = {
             movie_id: result[0].movie_id,
             cinema_id: result[0].cinema_id,
             name: result[0].name,
-            playing_time: result[0].playing_time,
+            playing_time: `${new Date(result[0].playing_time).getFullYear()}-${
+              new Date(result[0].playing_time).getMonth().toString().length < 2
+                ? `0${new Date(result[0].playing_time).getMonth() + 1}`
+                : new Date(result[0].playing_time).getMonth() + 1
+            }-${
+              new Date(result[0].playing_time).getDate().toString().length < 2
+                ? `0${new Date(result[0].playing_time).getDate()}`
+                : new Date(result[0].playing_time).getDate()
+            }T${
+              new Date(result[0].playing_time).getHours().toString().length < 2
+                ? `0${new Date(result[0].playing_time).getHours()}`
+                : new Date(result[0].playing_time).getHours()
+            }:${
+              new Date(result[0].playing_time).getMinutes().toString().length < 2
+                ? `0${new Date(result[0].playing_time).getMinutes()}`
+                : new Date(result[0].playing_time).getMinutes()
+            }:${
+              new Date(result[0].playing_time).getSeconds().toString().length < 2
+                ? `0${new Date(result[0].playing_time).getSeconds()}`
+                : new Date(result[0].playing_time).getSeconds()
+            }.000Z`,
             category: result[0].category,
             seat: result.map((item) => item.seat),
           },

@@ -8,6 +8,7 @@ Route.post("/", Auth, ticketControllers.inputTicket)
   .get("/", Auth, ticketControllers.getTicket)
   .post("/details", Auth, ticketControllers.getTicketByTrxID)
   .put("/:id", AuthAdmin, ticketControllers.updateTicketByUserId)
-  .delete("/:id", AuthAdmin, ticketControllers.deleteTicketByUserId);
+  .delete("/:id", AuthAdmin, ticketControllers.deleteTicketByUserId)
+  .get("/details", Auth, ticketControllers.getDetailTicket);
 
 module.exports = Route;

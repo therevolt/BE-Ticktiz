@@ -5,7 +5,37 @@ module.exports = {
     return new Promise((resolve, reject) => {
       connection.query("SELECT * FROM `playlists` WHERE movie_id=?", movie_id, (err, result) => {
         if (!err) {
-          resolve(result);
+          if (result.length >= 1) {
+            const newResult = result.map((item) => {
+              return {
+                ...item,
+                playing_time: `${new Date(item.playing_time).getFullYear()}-${
+                  new Date(item.playing_time).getMonth().toString().length < 2
+                    ? `0${new Date(item.playing_time).getMonth() + 1}`
+                    : new Date(item.playing_time).getMonth() + 1
+                }-${
+                  new Date(item.playing_time).getDate().toString().length < 2
+                    ? `0${new Date(item.playing_time).getDate()}`
+                    : new Date(item.playing_time).getDate()
+                }T${
+                  new Date(item.playing_time).getHours().toString().length < 2
+                    ? `0${new Date(item.playing_time).getHours()}`
+                    : new Date(item.playing_time).getHours()
+                }:${
+                  new Date(item.playing_time).getMinutes().toString().length < 2
+                    ? `0${new Date(item.playing_time).getMinutes()}`
+                    : new Date(item.playing_time).getMinutes()
+                }:${
+                  new Date(item.playing_time).getSeconds().toString().length < 2
+                    ? `0${new Date(item.playing_time).getSeconds()}`
+                    : new Date(item.playing_time).getSeconds()
+                }.000Z`,
+              };
+            });
+            resolve(newResult);
+          } else {
+            reject("Not Found");
+          }
         } else {
           reject(err.message);
         }

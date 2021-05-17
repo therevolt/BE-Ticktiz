@@ -139,6 +139,7 @@ module.exports = {
             reject("movieId not found");
           }
         } else {
+          console.log(err.message);
           reject(err.message);
         }
       });
@@ -146,9 +147,48 @@ module.exports = {
   },
   getMovieDetails: (movieId) => {
     return new Promise((resolve, reject) => {
-      connection.query("SELECT * FROM `movies` WHERE id = ?", [movieId], (err, result) => {
+      connection.query("SELECT * FROM `movies` WHERE id = ?", [movieId], (err, resultMovies) => {
         if (!err) {
-          resolve(result);
+          connection.query(
+            "SELECT * FROM `playlists` WHERE movie_id = ?",
+            [movieId],
+            (err2, resultPlaylists) => {
+              if (!err2) {
+                resolve([
+                  {
+                    ...resultMovies[0],
+                    playlists: resultPlaylists.map((item) => {
+                      return {
+                        time: `${new Date(item.playing_time).getFullYear()}-${
+                          new Date(item.playing_time).getMonth().toString().length < 2
+                            ? `0${new Date(item.playing_time).getMonth() + 1}`
+                            : new Date(item.playing_time).getMonth() + 1
+                        }-${
+                          new Date(item.playing_time).getDate().toString().length < 2
+                            ? `0${new Date(item.playing_time).getDate()}`
+                            : new Date(item.playing_time).getDate()
+                        }T${
+                          new Date(item.playing_time).getHours().toString().length < 2
+                            ? `0${new Date(item.playing_time).getHours()}`
+                            : new Date(item.playing_time).getHours()
+                        }:${
+                          new Date(item.playing_time).getMinutes().toString().length < 2
+                            ? `0${new Date(item.playing_time).getMinutes()}`
+                            : new Date(item.playing_time).getMinutes()
+                        }:${
+                          new Date(item.playing_time).getSeconds().toString().length < 2
+                            ? `0${new Date(item.playing_time).getSeconds()}`
+                            : new Date(item.playing_time).getSeconds()
+                        }.000Z`,
+                        cinemaId: item.cinema_id,
+                      };
+                    }),
+                  },
+                ]);
+              }
+            }
+          );
+          // resolve(resultMovies);
         } else {
           reject(err.message);
         }
@@ -157,12 +197,14 @@ module.exports = {
   },
   delMovie: (movieId) => {
     return new Promise((resolve, reject) => {
-      connection.query("DELETE FROM `movies` WHERE id = ?", [movieId], (err, result) => {
-        if (!err) {
-          resolve(result);
-        } else {
-          reject(err.message);
-        }
+      connection.query("DELETE FROM `playlists` WHERE movie_id = ?", [movieId], () => {
+        connection.query("DELETE FROM `movies` WHERE id = ?", [movieId], (err, result) => {
+          if (!err) {
+            resolve(result);
+          } else {
+            reject(err.message);
+          }
+        });
       });
     });
   },

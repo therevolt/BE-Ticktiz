@@ -30,7 +30,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       if (id) {
         connection.query(
-          "SELECT playlists.playing_time, tickets.status, cinemas.logo AS cinemas, movies.name AS movies, tickets.created_at AS order_time FROM tickets INNER JOIN ordered_seat ON tickets.ordered_seat_id = ordered_seat.id INNER JOIN cinemas ON ordered_seat.cinema_id = cinemas.id INNER JOIN playlists ON ordered_seat.playlist_id = playlists.id INNER JOIN movies ON playlists.movie_id WHERE tickets.user_id = ? GROUP BY tickets.created_at",
+          "SELECT tickets.transactions_id AS id, playlists.playing_time, tickets.status, cinemas.logo AS cinemas, movies.name AS movies, tickets.created_at AS order_time FROM tickets INNER JOIN ordered_seat ON tickets.ordered_seat_id = ordered_seat.id INNER JOIN cinemas ON ordered_seat.cinema_id = cinemas.id INNER JOIN playlists ON ordered_seat.playlist_id = playlists.id INNER JOIN movies ON playlists.movie_id WHERE tickets.user_id = ? AND playlists.movie_id = movies.id GROUP BY tickets.created_at",
           id,
           (err, result) => {
             if (!err) {
@@ -58,6 +58,7 @@ module.exports = {
           query.ordered_seat_id,
           (err, result) => {
             if (!err) {
+              console.log(result);
               resolve(result);
             } else {
               reject(err.message);
@@ -128,6 +129,22 @@ module.exports = {
           );
         }
       });
+    });
+  },
+  getDetailsTicket: (trxId) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT movies.name, playlists.playing_time,movies.category,concat(ordered_seat.seat_row,ordered_seat.seat_col) AS seat, transactions.total_price AS total_price FROM `tickets` INNER JOIN `transactions` INNER JOIN `playlists` INNER JOIN `movies` INNER JOIN `ordered_seat` WHERE transactions.id=? AND transactions.playlist_id=playlists.id AND playlists.movie_id=movies.id AND ordered_seat.transaction_id=transactions.id GROUP BY concat(ordered_seat.seat_row,ordered_seat.seat_col)",
+        [trxId],
+        (err, result) => {
+          if (!err) {
+            resolve(result);
+          } else {
+            console.log(err.message);
+            reject(err.message);
+          }
+        }
+      );
     });
   },
   deleteTicketByUserId: (ticketId) => {
