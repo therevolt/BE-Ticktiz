@@ -8,7 +8,7 @@ module.exports = {
         if (!err) {
           if (result.length <= 0) {
             connection.query(
-              "INSERT INTO `movies` (`id`, `name`, `image`, `description`, `rating`, `duration_hours`,`duration_minutes`, `release_date`, `director`, `genre`, `casts`, `category`, `updated_at`) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, current_timestamp())",
+              "INSERT INTO `movies` (`name`, `image`, `description`, `rating`, `duration_hours`,`duration_minutes`, `release_date`, `director`, `genre`, `casts`, `category`, `updated_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, current_timestamp())",
               [
                 body.name,
                 body.image,
