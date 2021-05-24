@@ -126,7 +126,7 @@ Repo Frontend : https://github.com/therevolt/ReactJS-FE-Tickitz
 
 ## 💻 Live Demo
 
-[Netlify](https://tickitz-web.netlify.app/)
+[Netlify](https://tickitz.xyz/)
 
 ## ✍️ Authors
 
